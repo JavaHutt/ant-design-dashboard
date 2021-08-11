@@ -1,4 +1,5 @@
 interface Price {
+    key?: string;
     app_name: string;
     app_url: string;
 }
