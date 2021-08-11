@@ -5,6 +5,7 @@ import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Price from '../models/price';
 import api from '../api/prices';
+import AddPrice from './modals/AddPrice';
 
 const { Title } = Typography;
 
@@ -25,6 +26,7 @@ const ThirdPartyApps: React.FC = () => {
     const [data, setData] = useState(dataSource);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [showAddModal, setShowAddModal] = useState(false);
 
     let searchInput: Input | null;
 
@@ -70,7 +72,7 @@ const ThirdPartyApps: React.FC = () => {
                         size="small"
                         onClick={() => {
                             confirm({ closeDropdown: false });
-                            setSearchText(selectedKeys[0].toString());
+                            setSearchText(selectedKeys[0] ? selectedKeys[0].toString() : '');
                             setSearchedColumn(dataIndex);
                         }}
                     >
@@ -80,20 +82,20 @@ const ThirdPartyApps: React.FC = () => {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) => record[dataIndex as keyof Price] ?
-            record[dataIndex as keyof Price]!.toLowerCase().includes(value.toString().toLowerCase())
+        onFilter: (value, record) => record[dataIndex as keyof Price]
+            ? record[dataIndex as keyof Price]!.toLowerCase().includes(value.toString().toLowerCase())
             : false,
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
                 setTimeout(() => searchInput!.select(), 100);
             }
         },
-        render: text => searchedColumn === dataIndex ? (
+        render: (text: string) => searchedColumn === dataIndex ? (
             <Highlighter
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[searchText]}
                 autoEscape
-                textToHighlight={text ? text.toString() : ''}
+                textToHighlight={text || ''}
             />
         ) : (
             text
@@ -111,9 +113,11 @@ const ThirdPartyApps: React.FC = () => {
             title: 'URL',
             dataIndex: 'app_url',
             key: 'url',
-            render: (text: string) => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
+            render: text => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
         },
     ];
+
+    const handleAdd = () => setShowAddModal(true);
 
     useEffect(() => {
         const fetchPrices = async () => {
@@ -131,6 +135,15 @@ const ThirdPartyApps: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
+            <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16, display: 'block' }}>
+                Add a bundle
+            </Button>
+            <AddPrice
+                visible={showAddModal}
+                setVisible={setShowAddModal}
+                data={data}
+                setData={setData}
+            />
             <Table dataSource={data} columns={columns} pagination={{ pageSize: 15 }} />
         </>
     );

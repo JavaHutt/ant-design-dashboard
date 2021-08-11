@@ -3,7 +3,15 @@ import ThirdPartyApps from './ThirdPartyApps';
 import styles from './Page.module.scss';
 
 const { Header, Content, Footer } = Layout;
-const menus = ['Weigh map', 'Countries', 'Affiliate articles', 'Proxy testing', 'Partner testing', 'Prices', '3rd Party Apps'];
+const menus = [
+    'Weigh map',
+    'Countries',
+    'Affiliate articles',
+    'Proxy testing',
+    'Partner testing',
+    'Prices',
+    '3rd Party Apps',
+];
 
 const Page: React.FC = () => (
     <Layout className="layout">
