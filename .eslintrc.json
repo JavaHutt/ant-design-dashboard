@@ -21,8 +21,9 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": ["error", 4],
+        "indent": ["warn", 4],
         "react/jsx-indent" : ["error", 4],
+        "react/jsx-indent-props" : ["error", 4],
         "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "react/react-in-jsx-scope": "off",
         "semi": ["error", "always", { "omitLastInOneLineBlock": true}],
@@ -31,7 +32,9 @@
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
         "object-curly-newline": "off",
-        "camelcase": "warn"
+        "camelcase": "warn",
+        "arrow-parens": "off"
+        // "no-confusing-arrow": "off"
     },
     "settings": {
         "import/resolver": {
