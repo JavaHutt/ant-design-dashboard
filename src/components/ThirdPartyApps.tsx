@@ -24,13 +24,13 @@ const columns = [
 ];
 
 const ThirdPartyApps: React.FC = () => {
-    const [data] = useState(dataSource);
+    const [data, setData] = useState(dataSource);
 
     useEffect(() => {
         const fetchPrices = async () => {
             try {
                 const res = await api.get('third-party-apps/urls');
-                console.log(res.data);
+                setData(res.data);
             } catch (e) {
                 console.log(e);
             }
