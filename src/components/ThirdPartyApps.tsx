@@ -80,9 +80,8 @@ const ThirdPartyApps: React.FC = () => {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        // TODO hard-coded field is very very bad
-        onFilter: (value, record) => record['app_name'] ?
-            record['app_name'].toLowerCase().includes(value.toString().toLowerCase())
+        onFilter: (value, record) => record[dataIndex as keyof Price] ?
+            record[dataIndex as keyof Price]!.toLowerCase().includes(value.toString().toLowerCase())
             : false,
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
