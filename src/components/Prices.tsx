@@ -4,7 +4,7 @@ import { Typography, Table, Input, Space, Button } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Bundle from '../models/bundle';
-import api from '../api/bundle';
+import api from '../api';
 import AddBundle from './modals/AddBundle';
 
 const { Title } = Typography;

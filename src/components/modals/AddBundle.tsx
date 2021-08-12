@@ -56,7 +56,6 @@ const AddBundle = ({ visible, setVisible, data, setData }: AddBundleProps) => {
                 >
                     <Input />
                 </Form.Item>
-
                 <Form.Item
                     label="URL"
                     name="app_url"
