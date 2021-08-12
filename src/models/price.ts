@@ -1,10 +1,21 @@
+interface AppsPrices {
+    default_price: number;
+    prices: Price[];
+}
+
 interface Price {
     app_name: string;
 	price_for_app: number;
-	price_for_app_by_country?: {
-        country: string;
-        price: number;
-    };
+	price_for_app_by_country?: CountryPrice[];
 }
 
-export default Price;
+interface CountryPrice {
+    country: string;
+    price: number;
+}
+
+export type {
+    AppsPrices,
+    Price,
+    CountryPrice,
+};

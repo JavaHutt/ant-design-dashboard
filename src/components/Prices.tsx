@@ -1,32 +1,20 @@
 import { useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button } from 'antd';
+import styles from './Prices.module.scss';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
-import Bundle from '../models/bundle';
+import { AppsPrices, Price } from '../models/price';
+import CountryPrices from './CountryPrices';
 import api from '../api';
-import AddBundle from './modals/AddBundle';
 
-const { Title } = Typography;
-
-const dataSource: Array<Bundle> = [
-    {
-        key: '1',
-        app_name: '312321',
-        app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C102687919',
-    },
-    {
-        key: '2',
-        app_name: '123213213',
-        app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C103947833',
-    },
-];
+const { Title, Text } = Typography;
 
 const Prices: React.FC = () => {
-    const [data, setData] = useState(dataSource);
+    const [data, setData] = useState<Price[]>();
+    const [defaultPrice, setDefaultPrice] = useState(0);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [showAddModal, setShowAddModal] = useState(false);
 
     let searchInput: Input | null;
 
@@ -41,7 +29,7 @@ const Prices: React.FC = () => {
         setSearchText('');
     };
 
-    const getColumnSearchProps: (dataIndex: string) => ColumnType<Bundle> = dataIndex => ({
+    const getColumnSearchProps: (dataIndex: string) => ColumnType<Price> = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
                 <Input
@@ -82,8 +70,8 @@ const Prices: React.FC = () => {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) => record[dataIndex as keyof Bundle]
-            ? record[dataIndex as keyof Bundle]!.toLowerCase().includes(value.toString().toLowerCase())
+        onFilter: (value, record) => record[dataIndex as keyof Price]
+            ? record[dataIndex as keyof Price]!.toString().toLowerCase().includes(value.toString().toLowerCase())
             : false,
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
@@ -102,49 +90,58 @@ const Prices: React.FC = () => {
         ),
     });
 
-    const columns: ColumnsType<Bundle> = [
+    const columns: ColumnsType<Price> = [
         {
             title: 'Bundle Name',
             dataIndex: 'app_name',
-            key: 'bundleName',
+            key: 'appName',
             ...getColumnSearchProps('app_name'),
         },
         {
-            title: 'URL',
-            dataIndex: 'app_url',
-            key: 'url',
-            render: text => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
+            title: 'Country',
+            dataIndex: 'country',
+            key: 'country',
+        },
+        {
+            title: 'Price',
+            dataIndex: 'price_for_app',
+            key: 'priceForApp',
         },
     ];
 
-    const handleAdd = () => setShowAddModal(true);
-
     useEffect(() => {
-        const fetchBundles = async () => {
+        const fetchPrices = async () => {
             try {
-                const res = await api.get<Bundle[]>('third-party-apps/urls');
-                setData(res.data);
+                const res = await api.get<AppsPrices>('third-party-apps/prices');
+                setData(res.data.prices);
+                setDefaultPrice(res.data.default_price);
             } catch (e) {
                 console.log(e);
             }
         };
 
-        fetchBundles();
+        fetchPrices();
     }, []);
+
+    const rowExpandable = (record: Price) => {
+        return record.price_for_app_by_country ? record.price_for_app_by_country?.length > 0 : false;
+    }
 
     return (
         <>
             <Title level={2}>Third Party Apps Prices</Title>
-            <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16, display: 'block' }}>
-                Add a bundle
-            </Button>
-            <AddBundle
-                visible={showAddModal}
-                setVisible={setShowAddModal}
-                data={data}
-                setData={setData}
+            <Table
+                dataSource={data}
+                columns={columns}
+                pagination={{ pageSize: 15 }}
+                expandable={{
+                    expandedRowRender: record => <CountryPrices data={record.price_for_app_by_country!} />,
+                    rowExpandable: record => rowExpandable(record)
+                }}
             />
-            <Table dataSource={data} columns={columns} pagination={{ pageSize: 15 }} />
+            <Text className={styles.footer}>
+                Note: for all other apps the price is <i>{defaultPrice}</i>
+            </Text>
         </>
     );
 };
