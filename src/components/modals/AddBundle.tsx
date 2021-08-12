@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
-import Price from '../../models/price';
+import Bundle from '../../models/bundle';
 
-interface AddPriceProps {
+interface AddBundleProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
-    data: Price[],
-    setData: React.Dispatch<React.SetStateAction<Price[]>>,
+    data: Bundle[],
+    setData: React.Dispatch<React.SetStateAction<Bundle[]>>,
 }
 
-const AddPrice = ({ visible, setVisible, data, setData }: AddPriceProps) => {
+const AddBundle = ({ visible, setVisible, data, setData }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
-    const handleOk = (price: Price) => {
-        setData([...data, price]);
+    const handleOk = (bundle: Bundle) => {
+        setData([...data, bundle]);
         setConfirmLoading(true);
         setTimeout(() => {
             setVisible(false);
@@ -22,13 +22,9 @@ const AddPrice = ({ visible, setVisible, data, setData }: AddPriceProps) => {
         }, 2000);
     };
 
-    const handleCancel = () => {
-        setVisible(false);
-    };
+    const handleCancel = () => setVisible(false);
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
+    const onFinishFailed = (errorInfo: any) => console.log('Failed:', errorInfo);
 
     return (
         <Modal
@@ -73,4 +69,4 @@ const AddPrice = ({ visible, setVisible, data, setData }: AddPriceProps) => {
     );
 };
 
-export default AddPrice;
+export default AddBundle;

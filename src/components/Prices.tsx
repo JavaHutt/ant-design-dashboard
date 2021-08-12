@@ -12,17 +12,17 @@ const { Title } = Typography;
 const dataSource: Array<Bundle> = [
     {
         key: '1',
-        app_name: 'com.mf.holerun.huawei',
+        app_name: '312321',
         app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C102687919',
     },
     {
         key: '2',
-        app_name: 'com.erikdevhw6.lumbercraft3d',
+        app_name: '123213213',
         app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C103947833',
     },
 ];
 
-const ThirdPartyApps: React.FC = () => {
+const Prices: React.FC = () => {
     const [data, setData] = useState(dataSource);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -107,14 +107,12 @@ const ThirdPartyApps: React.FC = () => {
             title: 'Bundle Name',
             dataIndex: 'app_name',
             key: 'bundleName',
-            width: '40%',
             ...getColumnSearchProps('app_name'),
         },
         {
             title: 'URL',
             dataIndex: 'app_url',
             key: 'url',
-            width: '60%',
             render: text => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
         },
     ];
@@ -136,7 +134,7 @@ const ThirdPartyApps: React.FC = () => {
 
     return (
         <>
-            <Title level={2}>Third Party Apps</Title>
+            <Title level={2}>Third Party Apps Prices</Title>
             <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16, display: 'block' }}>
                 Add a bundle
             </Button>
@@ -151,4 +149,4 @@ const ThirdPartyApps: React.FC = () => {
     );
 };
 
-export default ThirdPartyApps;
+export default Prices;
