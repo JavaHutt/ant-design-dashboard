@@ -5,16 +5,16 @@ import Bundle from '../../models/bundle';
 interface AddBundleProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
-    data: Bundle[],
-    setData: React.Dispatch<React.SetStateAction<Bundle[]>>,
+    bundles: Bundle[],
+    setBundles: React.Dispatch<React.SetStateAction<Bundle[]>>,
 }
 
-const AddBundle = ({ visible, setVisible, data, setData }: AddBundleProps) => {
+const AddBundle = ({ visible, setVisible, bundles, setBundles }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
     const handleOk = (bundle: Bundle) => {
-        setData([...data, bundle]);
+        setBundles([...bundles, bundle]);
         setConfirmLoading(true);
         setTimeout(() => {
             setVisible(false);

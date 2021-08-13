@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import ThirdPartyApps from './ThirdPartyApps';
 import Prices from './Prices';

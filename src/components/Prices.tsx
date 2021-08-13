@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button } from 'antd';
-import styles from './Prices.module.scss';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
+import styles from './Prices.module.scss';
 import { AppsPrices, Price } from '../models/price';
 import CountryPrices from './CountryPrices';
 import api from '../api';
@@ -11,7 +11,7 @@ import api from '../api';
 const { Title, Text } = Typography;
 
 const Prices: React.FC = () => {
-    const [data, setData] = useState<Price[]>();
+    const [prices, setPrices] = useState<Price[]>();
     const [defaultPrice, setDefaultPrice] = useState(0);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -90,22 +90,26 @@ const Prices: React.FC = () => {
         ),
     });
 
+    const rowExpandable = (record: Price) => record.price_for_app_by_country
+        ? record.price_for_app_by_country?.length > 0
+        : false;
+
+    const expandedRowRender = (record: Price) => <CountryPrices data={record.price_for_app_by_country!} />;
+
     const columns: ColumnsType<Price> = [
         {
             title: 'Bundle Name',
             dataIndex: 'app_name',
             key: 'appName',
+            width: '70%',
             ...getColumnSearchProps('app_name'),
-        },
-        {
-            title: 'Country',
-            dataIndex: 'country',
-            key: 'country',
         },
         {
             title: 'Price',
             dataIndex: 'price_for_app',
             key: 'priceForApp',
+            sorter: (a, b) => a.price_for_app - b.price_for_app,
+            width: '30%',
         },
     ];
 
@@ -113,7 +117,7 @@ const Prices: React.FC = () => {
         const fetchPrices = async () => {
             try {
                 const res = await api.get<AppsPrices>('third-party-apps/prices');
-                setData(res.data.prices);
+                setPrices(res.data.prices);
                 setDefaultPrice(res.data.default_price);
             } catch (e) {
                 console.log(e);
@@ -123,24 +127,21 @@ const Prices: React.FC = () => {
         fetchPrices();
     }, []);
 
-    const rowExpandable = (record: Price) => {
-        return record.price_for_app_by_country ? record.price_for_app_by_country?.length > 0 : false;
-    }
-
     return (
         <>
             <Title level={2}>Third Party Apps Prices</Title>
             <Table
-                dataSource={data}
+                dataSource={prices}
                 columns={columns}
                 pagination={{ pageSize: 15 }}
                 expandable={{
-                    expandedRowRender: record => <CountryPrices data={record.price_for_app_by_country!} />,
-                    rowExpandable: record => rowExpandable(record)
+                    expandedRowRender,
+                    rowExpandable,
                 }}
             />
             <Text className={styles.footer}>
-                Note: for all other apps the price is <i>{defaultPrice}</i>
+                Note: for all other apps the price is
+                <i>{defaultPrice}</i>
             </Text>
         </>
     );

@@ -23,7 +23,7 @@ const dataSource: Array<Bundle> = [
 ];
 
 const ThirdPartyApps: React.FC = () => {
-    const [data, setData] = useState(dataSource);
+    const [bundles, setBundles] = useState(dataSource);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -125,7 +125,7 @@ const ThirdPartyApps: React.FC = () => {
         const fetchBundles = async () => {
             try {
                 const res = await api.get<Bundle[]>('third-party-apps/urls');
-                setData(res.data);
+                setBundles(res.data);
             } catch (e) {
                 console.log(e);
             }
@@ -143,10 +143,10 @@ const ThirdPartyApps: React.FC = () => {
             <AddBundle
                 visible={showAddModal}
                 setVisible={setShowAddModal}
-                data={data}
-                setData={setData}
+                bundles={bundles}
+                setBundles={setBundles}
             />
-            <Table dataSource={data} columns={columns} pagination={{ pageSize: 15 }} />
+            <Table dataSource={bundles} columns={columns} pagination={{ pageSize: 15 }} />
         </>
     );
 };
