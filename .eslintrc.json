@@ -18,7 +18,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "react-hooks"
     ],
     "rules": {
         "max-len": ["warn", 120, { "ignoreRegExpLiterals": true }],
@@ -36,7 +37,11 @@
         "camelcase": "warn",
         "arrow-parens": "off",
         "react/prop-types": "off",
-        "no-confusing-arrow": "off"
+        "no-confusing-arrow": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"]
     },
     "settings": {
         "import/resolver": {

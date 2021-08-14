@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
 import Bundle from '../../models/bundle';
+import { BundleActionTypes } from '../../store/types/bundle';
 
 interface AddBundleProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
-    bundles: Bundle[],
-    setBundles: React.Dispatch<React.SetStateAction<Bundle[]>>,
+    addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
 }
 
-const AddBundle = ({ visible, setVisible, bundles, setBundles }: AddBundleProps) => {
+const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
     const handleOk = (bundle: Bundle) => {
-        setBundles([...bundles, bundle]);
+        addBundle(bundle);
         setConfirmLoading(true);
         setTimeout(() => {
             setVisible(false);

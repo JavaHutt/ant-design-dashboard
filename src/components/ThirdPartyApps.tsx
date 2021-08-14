@@ -4,31 +4,22 @@ import { Typography, Table, Input, Space, Button } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Bundle from '../models/bundle';
-import api from '../api';
 import AddBundle from './modals/AddBundle';
+import useTypedSelector from '../hooks/useTypedSelector';
+import useActions from '../hooks/useActions';
 
 const { Title } = Typography;
 
-const dataSource: Array<Bundle> = [
-    {
-        key: '1',
-        app_name: 'com.mf.holerun.huawei',
-        app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C102687919',
-    },
-    {
-        key: '2',
-        app_name: 'com.erikdevhw6.lumbercraft3d',
-        app_url: 'https://appgallery.cloud.huawei.com/ag/n/app/C103947833',
-    },
-];
-
 const ThirdPartyApps: React.FC = () => {
-    const [bundles, setBundles] = useState(dataSource);
+    const { bundles } = useTypedSelector(state => state.bundle);
+    const { fetchBundles, addBundle } = useActions();
+
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
 
     let searchInput: Input | null;
+    const pageSize = 15;
 
     const handleSearch = (selectedKeys: React.Key[], confirm: () => void, dataIndex: string) => {
         confirm();
@@ -122,15 +113,6 @@ const ThirdPartyApps: React.FC = () => {
     const handleAdd = () => setShowAddModal(true);
 
     useEffect(() => {
-        const fetchBundles = async () => {
-            try {
-                const res = await api.get<Bundle[]>('third-party-apps/urls');
-                setBundles(res.data);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         fetchBundles();
     }, []);
 
@@ -143,10 +125,9 @@ const ThirdPartyApps: React.FC = () => {
             <AddBundle
                 visible={showAddModal}
                 setVisible={setShowAddModal}
-                bundles={bundles}
-                setBundles={setBundles}
+                addBundle={addBundle}
             />
-            <Table dataSource={bundles} columns={columns} pagination={{ pageSize: 15 }} />
+            <Table dataSource={bundles} columns={columns} pagination={{ pageSize }} />
         </>
     );
 };

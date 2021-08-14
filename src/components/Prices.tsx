@@ -16,6 +16,8 @@ const Prices: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
+    const pageSize = 15;
+
     let searchInput: Input | null;
 
     const handleSearch = (selectedKeys: React.Key[], confirm: () => void, dataIndex: string) => {
@@ -133,7 +135,7 @@ const Prices: React.FC = () => {
             <Table
                 dataSource={prices}
                 columns={columns}
-                pagination={{ pageSize: 15 }}
+                pagination={{ pageSize }}
                 expandable={{
                     expandedRowRender,
                     rowExpandable,
