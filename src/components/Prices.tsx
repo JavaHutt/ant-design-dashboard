@@ -4,15 +4,16 @@ import { Typography, Table, Input, Space, Button } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import styles from './Prices.module.scss';
-import { AppsPrices, Price } from '../models/price';
+import { Price } from '../models/price';
 import CountryPrices from './CountryPrices';
-import api from '../api';
+import useActions from '../hooks/useActions';
+import useTypedSelector from '../hooks/useTypedSelector';
 
 const { Title, Text } = Typography;
 
 const Prices: React.FC = () => {
-    const [prices, setPrices] = useState<Price[]>();
-    const [defaultPrice, setDefaultPrice] = useState(0);
+    const { prices, defaultPrice } = useTypedSelector(state => state.price);
+    const { fetchPrices } = useActions();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
@@ -116,16 +117,6 @@ const Prices: React.FC = () => {
     ];
 
     useEffect(() => {
-        const fetchPrices = async () => {
-            try {
-                const res = await api.get<AppsPrices>('third-party-apps/prices');
-                setPrices(res.data.prices);
-                setDefaultPrice(res.data.default_price);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         fetchPrices();
     }, []);
 
@@ -142,8 +133,7 @@ const Prices: React.FC = () => {
                 }}
             />
             <Text className={styles.footer}>
-                Note: for all other apps the price is
-                <i>{defaultPrice}</i>
+                Note: for all other apps the price is <i>{defaultPrice}</i>
             </Text>
         </>
     );

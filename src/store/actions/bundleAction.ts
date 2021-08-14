@@ -3,7 +3,6 @@ import { BundleAction, BundleActionTypes } from '../types/bundle';
 import Bundle from '../../models/bundle';
 import api from '../../api';
 
-// eslint-disable-next-line
 export const fetchBundles = () => (
     async (dispatch: Dispatch<BundleAction>) => {
         try {

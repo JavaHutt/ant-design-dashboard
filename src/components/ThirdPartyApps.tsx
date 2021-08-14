@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
@@ -13,6 +13,8 @@ const { Title } = Typography;
 const ThirdPartyApps: React.FC = () => {
     const { bundles } = useTypedSelector(state => state.bundle);
     const { fetchBundles, addBundle } = useActions();
+    // TODO what the fuck is going on here????
+    // const memoFetchBundles = useCallback(() => fetchBundles, [fetchBundles]);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');

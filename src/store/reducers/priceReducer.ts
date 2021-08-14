@@ -1,0 +1,21 @@
+import { PriceState, PriceAction, PriceActionTypes } from '../types/price';
+
+const defaultState: PriceState = {
+    prices: [],
+    defaultPrice: 0,
+    loading: false,
+    error: null,
+};
+
+const priceReducer = (state = defaultState, action: PriceAction) => {
+    switch (action.type) {
+    case PriceActionTypes.FETCH_PRICES: {
+        const { prices, default_price: defaultPrice } = action.payload;
+        return { ...state, prices, defaultPrice, loading: false, error: null };
+    }
+    default:
+        return state;
+    }
+};
+
+export default priceReducer;
