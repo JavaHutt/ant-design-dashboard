@@ -9,6 +9,7 @@ export interface PriceState {
 
 export enum PriceActionTypes {
     FETCH_PRICES = 'FETCH_PRICES',
+    FETCH_PRICES_ERROR = 'FETCH_PRICES_ERROR',
 }
 
 interface FetchPricesAction {
@@ -16,4 +17,9 @@ interface FetchPricesAction {
     payload: AppsPrices;
 }
 
-export type PriceAction = FetchPricesAction;
+interface FetchPricesErrorAction {
+    type: PriceActionTypes.FETCH_PRICES_ERROR;
+    payload: string;
+}
+
+export type PriceAction = FetchPricesAction | FetchPricesErrorAction;

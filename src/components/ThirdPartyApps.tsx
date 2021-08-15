@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Typography, Table, Input, Space, Button } from 'antd';
+import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Bundle from '../models/bundle';
 import AddBundle from './modals/AddBundle';
 import useTypedSelector from '../hooks/useTypedSelector';
@@ -11,7 +11,7 @@ import useActions from '../hooks/useActions';
 const { Title } = Typography;
 
 const ThirdPartyApps: React.FC = () => {
-    const { bundles } = useTypedSelector(state => state.bundle);
+    const { bundles, error: errorLoading } = useTypedSelector(state => state.bundle);
     const { fetchBundles, addBundle } = useActions();
     // TODO what the fuck is going on here????
     // const memoFetchBundles = useCallback(() => fetchBundles, [fetchBundles]);
@@ -112,11 +112,20 @@ const ThirdPartyApps: React.FC = () => {
         },
     ];
 
+    const notifyError = (description: string) => {
+        notification.open({
+            message: 'Error loading bundles',
+            description,
+            icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
+        });
+    };
+
     const handleAdd = () => setShowAddModal(true);
 
     useEffect(() => {
         fetchBundles();
-    }, []);
+        if (errorLoading) notifyError(errorLoading);
+    }, [errorLoading]);
 
     return (
         <>

@@ -8,6 +8,7 @@ export interface BundleState {
 
 export enum BundleActionTypes {
     FETCH_BUNDLES = 'FETCH_BUNDLES',
+    FETCH_BUNDLES_ERROR = 'FETCH_BUNDLES_ERROR',
     ADD_BUNDLE = 'ADD_BUNDLE',
 }
 
@@ -16,9 +17,14 @@ interface FetchBundlesAction {
     payload: Bundle[];
 }
 
+interface FetchBundlesErrorAction {
+    type: BundleActionTypes.FETCH_BUNDLES_ERROR;
+    payload: string;
+}
+
 interface AddBundleAction {
     type: BundleActionTypes.ADD_BUNDLE;
     payload: Bundle;
 }
 
-export type BundleAction = FetchBundlesAction | AddBundleAction;
+export type BundleAction = FetchBundlesAction | FetchBundlesErrorAction | AddBundleAction;

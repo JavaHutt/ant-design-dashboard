@@ -10,7 +10,7 @@ export const fetchPrices = () => (
             const res = await api.get<AppsPrices>('third-party-apps/prices');
             dispatch({ type: PriceActionTypes.FETCH_PRICES, payload: res.data });
         } catch (e) {
-            console.log(e);
+            dispatch({ type: PriceActionTypes.FETCH_PRICES_ERROR, payload: e.message });
         }
     }
 );

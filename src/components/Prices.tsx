@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Typography, Table, Input, Space, Button } from 'antd';
+import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from './Prices.module.scss';
 import { Price } from '../models/price';
 import CountryPrices from './CountryPrices';
@@ -12,7 +12,7 @@ import useTypedSelector from '../hooks/useTypedSelector';
 const { Title, Text } = Typography;
 
 const Prices: React.FC = () => {
-    const { prices, defaultPrice } = useTypedSelector(state => state.price);
+    const { prices, defaultPrice, error: errorLoading } = useTypedSelector(state => state.price);
     const { fetchPrices } = useActions();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -116,9 +116,18 @@ const Prices: React.FC = () => {
         },
     ];
 
+    const notifyError = (description: string) => {
+        notification.open({
+            message: 'Error loading prices',
+            description,
+            icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
+        });
+    };
+
     useEffect(() => {
         fetchPrices();
-    }, []);
+        if (errorLoading) notifyError(errorLoading);
+    }, [errorLoading]);
 
     return (
         <>
@@ -132,9 +141,11 @@ const Prices: React.FC = () => {
                     rowExpandable,
                 }}
             />
-            <Text className={styles.footer}>
-                Note: for all other apps the price is <i>{defaultPrice}</i>
-            </Text>
+            {!errorLoading && (
+                <Text className={styles.footer}>
+                    Note: for all other apps the price is <i>{defaultPrice}</i>
+                </Text>
+            )}
         </>
     );
 };

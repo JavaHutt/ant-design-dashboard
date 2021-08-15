@@ -9,7 +9,7 @@ export const fetchBundles = () => (
             const res = await api.get<Bundle[]>('third-party-apps/urls');
             dispatch({ type: BundleActionTypes.FETCH_BUNDLES, payload: res.data });
         } catch (e) {
-            console.log(e);
+            dispatch({ type: BundleActionTypes.FETCH_BUNDLES_ERROR, payload: e.message });
         }
     }
 );

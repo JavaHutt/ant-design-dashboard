@@ -13,6 +13,9 @@ const priceReducer = (state = defaultState, action: PriceAction) => {
         const { prices, default_price: defaultPrice } = action.payload;
         return { ...state, prices, defaultPrice, loading: false, error: null };
     }
+    case PriceActionTypes.FETCH_PRICES_ERROR: {
+        return { ...state, error: action.payload };
+    }
     default:
         return state;
     }
