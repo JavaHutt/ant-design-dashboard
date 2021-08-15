@@ -3,6 +3,7 @@ import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import PricesButtons from './PricesButtons';
 import styles from './Prices.module.scss';
 import { Price } from '../models/price';
 import CountryPrices from './CountryPrices';
@@ -132,6 +133,7 @@ const Prices: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps Prices</Title>
+            <PricesButtons prices={prices} />
             <Table
                 dataSource={prices}
                 columns={columns}

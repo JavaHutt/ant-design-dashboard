@@ -11,9 +11,14 @@ interface ThirdPartyAppsButtonsProps {
     addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
 }
 
-const ThirdPartyAppsButtons = ({ bundles, addBundle }: ThirdPartyAppsButtonsProps) => {
+interface BundleHeaders {
+    label: string;
+    key: keyof Bundle;
+}
+
+const ThirdPartyAppsButtons: React.FC<ThirdPartyAppsButtonsProps> = ({ bundles, addBundle }) => {
     const [showAddModal, setShowAddModal] = useState(false);
-    const csvHeaders = [
+    const csvHeaders: BundleHeaders[] = [
         { label: 'Bundle Name', key: 'app_name' },
         { label: 'URL', key: 'app_url' },
     ];
