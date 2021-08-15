@@ -3,8 +3,8 @@ import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import ThirdPartyAppsButtons from './ThirdPartyAppsButtons';
 import Bundle from '../models/bundle';
-import AddBundle from './modals/AddBundle';
 import useTypedSelector from '../hooks/useTypedSelector';
 import useActions from '../hooks/useActions';
 
@@ -18,7 +18,6 @@ const ThirdPartyApps: React.FC = () => {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [showAddModal, setShowAddModal] = useState(false);
 
     let searchInput: Input | null;
     const pageSize = 15;
@@ -120,8 +119,6 @@ const ThirdPartyApps: React.FC = () => {
         });
     };
 
-    const handleAdd = () => setShowAddModal(true);
-
     useEffect(() => {
         fetchBundles();
         if (errorLoading) notifyError(errorLoading);
@@ -130,14 +127,7 @@ const ThirdPartyApps: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16, display: 'block' }}>
-                Add a bundle
-            </Button>
-            <AddBundle
-                visible={showAddModal}
-                setVisible={setShowAddModal}
-                addBundle={addBundle}
-            />
+            <ThirdPartyAppsButtons bundles={bundles} addBundle={addBundle} />
             <Table dataSource={bundles} columns={columns} pagination={{ pageSize }} />
         </>
     );
