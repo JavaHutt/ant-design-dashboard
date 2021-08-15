@@ -10,6 +10,7 @@ export enum BundleActionTypes {
     FETCH_BUNDLES = 'FETCH_BUNDLES',
     FETCH_BUNDLES_ERROR = 'FETCH_BUNDLES_ERROR',
     ADD_BUNDLE = 'ADD_BUNDLE',
+    DELETE_BUNDLE = 'DELETE_BUNDLE',
 }
 
 interface FetchBundlesAction {
@@ -27,4 +28,9 @@ interface AddBundleAction {
     payload: Bundle;
 }
 
-export type BundleAction = FetchBundlesAction | FetchBundlesErrorAction | AddBundleAction;
+interface DeleteBundleAction {
+    type: BundleActionTypes.DELETE_BUNDLE;
+    payload: string;
+}
+
+export type BundleAction = FetchBundlesAction | FetchBundlesErrorAction | AddBundleAction | DeleteBundleAction;

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import ThirdPartyApps from './ThirdPartyApps';
+import ThirdPartyApps from './third-party-apps/ThirdPartyApps';
 import Prices from './Prices';
 import styles from './Page.module.scss';
 

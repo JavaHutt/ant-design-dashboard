@@ -1,18 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Typography, Table, Input, Space, Button, notification } from 'antd';
+import { Typography, Table, Input, Space, Button, Tooltip, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
-import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import ThirdPartyAppsButtons from './ThirdPartyAppsButtons';
-import Bundle from '../models/bundle';
-import useTypedSelector from '../hooks/useTypedSelector';
-import useActions from '../hooks/useActions';
+import { SearchOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import ThirdPartyAppsBar from './ThirdPartyAppsBar';
+import ThirdPartyAppsActions from './ThirdPartyAppsActions';
+import Bundle from '../../models/bundle';
+import useTypedSelector from '../../hooks/useTypedSelector';
+import useActions from '../../hooks/useActions';
 
 const { Title } = Typography;
 
 const ThirdPartyApps: React.FC = () => {
     const { bundles, error: errorLoading } = useTypedSelector(state => state.bundle);
-    const { fetchBundles, addBundle } = useActions();
+    const { fetchBundles, addBundle, deleteBundle } = useActions();
     // TODO what the fuck is going on here????
     // const memoFetchBundles = useCallback(() => fetchBundles, [fetchBundles]);
 
@@ -106,8 +107,14 @@ const ThirdPartyApps: React.FC = () => {
             title: 'URL',
             dataIndex: 'app_url',
             key: 'url',
-            width: '60%',
+            width: '50%',
             render: text => <a href={text} target="_blank" rel="noreferrer">{text}</a>,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            width: '10%',
+            render: record => <ThirdPartyAppsActions bundle={record} deleteBundle={deleteBundle} />,
         },
     ];
 
@@ -127,8 +134,13 @@ const ThirdPartyApps: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            <ThirdPartyAppsButtons bundles={bundles} addBundle={addBundle} />
-            <Table dataSource={bundles} columns={columns} pagination={{ pageSize }} />
+            <ThirdPartyAppsBar bundles={bundles} addBundle={addBundle} />
+            <Table
+                rowKey={record => record.app_name}
+                dataSource={bundles}
+                columns={columns}
+                pagination={{ pageSize }}
+            />
         </>
     );
 };

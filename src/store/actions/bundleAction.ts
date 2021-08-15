@@ -15,3 +15,5 @@ export const fetchBundles = () => (
 );
 
 export const addBundle = (bundle: Bundle) => ({ type: BundleActionTypes.ADD_BUNDLE, payload: bundle });
+
+export const deleteBundle = (key: string) => ({ type: BundleActionTypes.DELETE_BUNDLE, payload: key });

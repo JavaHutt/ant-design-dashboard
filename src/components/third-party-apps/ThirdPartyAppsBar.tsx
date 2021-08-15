@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { Button, Tooltip, Space } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
-import AddBundle from './modals/AddBundle';
-import Bundle from '../models/bundle';
-import { BundleActionTypes } from '../store/types/bundle';
+import AddBundle from '../modals/AddBundle';
+import Bundle from '../../models/bundle';
+import { BundleActionTypes } from '../../store/types/bundle';
 
-interface ThirdPartyAppsButtonsProps {
+interface ThirdPartyAppsBarProps {
     bundles: Bundle[];
     addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
 }
@@ -16,7 +16,7 @@ interface BundleHeaders {
     key: keyof Bundle;
 }
 
-const ThirdPartyAppsButtons: React.FC<ThirdPartyAppsButtonsProps> = ({ bundles, addBundle }) => {
+const ThirdPartyAppsBar: React.FC<ThirdPartyAppsBarProps> = ({ bundles, addBundle }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const csvHeaders: BundleHeaders[] = [
         { label: 'Bundle Name', key: 'app_name' },
@@ -44,4 +44,4 @@ const ThirdPartyAppsButtons: React.FC<ThirdPartyAppsButtonsProps> = ({ bundles, 
     );
 };
 
-export default ThirdPartyAppsButtons;
+export default ThirdPartyAppsBar;
