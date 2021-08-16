@@ -1,9 +1,11 @@
+import Login from './components/Login';
 import Page from './components/Page';
 import './App.css';
 
 const App = () => (
     <div className="app">
-        <Page />
+        <Login />
+        {/* <Page /> */}
     </div>
 );
 
