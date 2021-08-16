@@ -1,7 +1,7 @@
 import { CSVLink } from 'react-csv';
 import { Button, Tooltip, Space } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
-import { Price } from '../models/price';
+import { Price } from '../../models/price';
 
 interface PricesButtonsProps {
     prices: Price[];

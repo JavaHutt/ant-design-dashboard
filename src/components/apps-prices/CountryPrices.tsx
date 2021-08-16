@@ -1,7 +1,7 @@
 import { Divider, Table } from 'antd';
-import { CountryPrice } from '../models/price';
+import { CountryPrice } from '../../models/price';
 
-const CountryPrices = ({ data }: {data: CountryPrice[]}) => {
+const CountryPrices = ({ data }: { data: CountryPrice[] }) => {
     const columns = [
         { title: 'Country', dataIndex: 'country', key: 'country', width: '70%' },
         { title: 'Price', dataIndex: 'price', key: 'price', width: '70%' },

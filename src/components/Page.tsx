@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import ThirdPartyApps from './third-party-apps/ThirdPartyApps';
-import Prices from './Prices';
+import Prices from './apps-prices/Prices';
 import styles from './Page.module.scss';
 
 const { Header, Content, Footer } = Layout;

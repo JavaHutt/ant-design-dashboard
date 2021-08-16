@@ -3,12 +3,12 @@ import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import PricesButtons from './PricesButtons';
+import PricesButtons from './PricesBar';
 import styles from './Prices.module.scss';
-import { Price } from '../models/price';
+import { Price } from '../../models/price';
 import CountryPrices from './CountryPrices';
-import useActions from '../hooks/useActions';
-import useTypedSelector from '../hooks/useTypedSelector';
+import useActions from '../../hooks/useActions';
+import useTypedSelector from '../../hooks/useTypedSelector';
 
 const { Title, Text } = Typography;
 
@@ -95,7 +95,7 @@ const Prices: React.FC = () => {
     });
 
     const rowExpandable = (record: Price) => record.price_for_app_by_country
-        ? record.price_for_app_by_country?.length > 0
+        ? record.price_for_app_by_country.length > 0
         : false;
 
     const expandedRowRender = (record: Price) => <CountryPrices data={record.price_for_app_by_country!} />;
@@ -112,8 +112,8 @@ const Prices: React.FC = () => {
             title: 'Price',
             dataIndex: 'price_for_app',
             key: 'priceForApp',
-            sorter: (a, b) => a.price_for_app - b.price_for_app,
             width: '30%',
+            sorter: (a, b) => a.price_for_app - b.price_for_app,
         },
     ];
 
