@@ -6,9 +6,17 @@ const CountryPrices = ({ data }: { data: CountryPrice[] }) => {
         { title: 'Country', dataIndex: 'country', key: 'country', width: '70%' },
         { title: 'Price', dataIndex: 'price', key: 'price', width: '70%' },
     ];
+
+    const pricesWithKeys = () => data.map((countryPrice, index) => (
+        {
+            key: index.toString(),
+            ...countryPrice,
+        }
+    ));
+
     return (
         <>
-            <Table columns={columns} dataSource={data} pagination={false} />
+            <Table rowKey={record => record.key} columns={columns} dataSource={pricesWithKeys()} pagination={false} />
             <Divider />
         </>
     );

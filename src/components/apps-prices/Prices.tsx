@@ -135,6 +135,7 @@ const Prices: React.FC = () => {
             <Title level={2}>Third Party Apps Prices</Title>
             <PricesButtons prices={prices} />
             <Table
+                rowKey={record => record.app_name}
                 dataSource={prices}
                 columns={columns}
                 pagination={{ pageSize }}
