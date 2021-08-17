@@ -1,32 +1,19 @@
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Alert } from 'antd';
 import styles from './Login.module.scss';
-import userPool from '../userPool';
+import useActions from '../../hooks/useActions';
+import useTypedSelector from '../../hooks/useTypedSelector';
 
 interface onFinishValues {
     username: string;
     password: string;
 }
 
-const Login: React.FC = () => {
+const LoginForm: React.FC = () => {
+    const { error } = useTypedSelector(state => state.user);
+    const { userLogin } = useActions();
+
     const onFinish = (values: onFinishValues) => {
-        const { username, password } = values;    
-        
-        const user = new CognitoUser({
-            Username: username,
-            Pool: userPool,
-        });
-
-        const authDetails = new AuthenticationDetails({
-            Username: username,
-            Password: password,
-        });
-
-        user.authenticateUser(authDetails, {
-            onSuccess: data => console.log('success', data),
-            onFailure: err => console.error('failure', err),
-            newPasswordRequired: data => console.log('new password required', data),
-        })
+        userLogin(values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -43,6 +30,7 @@ const Login: React.FC = () => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
+                {error && <Alert style={{ marginBottom: '20px' }} message={error.message} type="error" />}
                 <Form.Item
                     label="Username"
                     name="username"
@@ -73,4 +61,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default LoginForm;

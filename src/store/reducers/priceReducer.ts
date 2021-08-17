@@ -7,7 +7,7 @@ const defaultState: PriceState = {
     error: null,
 };
 
-const priceReducer = (state = defaultState, action: PriceAction) => {
+const priceReducer = (state = defaultState, action: PriceAction): PriceState => {
     switch (action.type) {
     case PriceActionTypes.FETCH_PRICES: {
         const { prices, default_price: defaultPrice } = action.payload;

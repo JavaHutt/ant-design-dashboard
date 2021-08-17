@@ -6,7 +6,7 @@ const defaultState: BundleState = {
     error: null,
 };
 
-const bundleReducer = (state = defaultState, action: BundleAction) => {
+const bundleReducer = (state = defaultState, action: BundleAction): BundleState => {
     switch (action.type) {
     case BundleActionTypes.FETCH_BUNDLES:
         return { ...state, bundles: action.payload, loading: false, error: null };

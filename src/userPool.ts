@@ -5,6 +5,6 @@ const { REACT_APP_USER_POOL_ID: UserPoolId, REACT_APP_USER_POOL_CLIENT_ID: Clien
 const poolData: ICognitoUserPoolData = {
     UserPoolId: UserPoolId!,
     ClientId: ClientId!,
-}
+};
 
 export default new CognitoUserPool(poolData);
