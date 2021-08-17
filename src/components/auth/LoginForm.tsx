@@ -1,4 +1,7 @@
+import { Dispatch } from 'redux';
 import { Form, Input, Button, Checkbox, Alert } from 'antd';
+import LoginValues from '../../models/user';
+import { UserAction } from '../../store/types/user';
 import styles from './Login.module.scss';
 import useActions from '../../hooks/useActions';
 import useTypedSelector from '../../hooks/useTypedSelector';
@@ -8,10 +11,12 @@ interface onFinishValues {
     password: string;
 }
 
-const LoginForm: React.FC = () => {
-    const { error } = useTypedSelector(state => state.user);
-    const { userLogin } = useActions();
+interface LoginFormProps {
+    error: any;
+    userLogin: ({ username, password }: LoginValues) => (dispatch: Dispatch<UserAction>) => Promise<void>;
+}
 
+const LoginForm: React.FC<LoginFormProps> = ({ error, userLogin }) => {
     const onFinish = (values: onFinishValues) => {
         userLogin(values);
     };

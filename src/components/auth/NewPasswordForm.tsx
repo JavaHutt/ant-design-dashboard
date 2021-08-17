@@ -1,7 +1,8 @@
+import { Dispatch } from 'redux';
 import { Form, Input, Button, Typography, Alert } from 'antd';
+import { CognitoUser } from 'amazon-cognito-identity-js';
+import { UserAction, UserActionTypes } from '../../store/types/user';
 import styles from './Login.module.scss';
-import useActions from '../../hooks/useActions';
-import useTypedSelector from '../../hooks/useTypedSelector';
 
 const { Text } = Typography;
 
@@ -10,11 +11,18 @@ interface onFinishValues {
     confirm: string;
 }
 
-const NewPasswordForm: React.FC = () => {
-    const { user, error } = useTypedSelector(state => state.user);
-    const { userError, userChangePassword } = useActions();
+interface NewPasswordFormProps {
+    user: CognitoUser;
+    error: any;
+    userError: (errorInfo: any) => {
+        type: UserActionTypes;
+        payload: any;
+    };
+    userChangePassword: (user: CognitoUser, newPassword: string) => (dispatch: Dispatch<UserAction>) => Promise<void>;
+}
 
-    const onFinish = (values: onFinishValues) => userChangePassword(user!, values.password);
+const NewPasswordForm: React.FC<NewPasswordFormProps> = ({ user, error, userError, userChangePassword }) => {
+    const onFinish = (values: onFinishValues) => userChangePassword(user, values.password);
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
