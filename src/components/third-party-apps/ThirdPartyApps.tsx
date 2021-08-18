@@ -1,19 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Typography, Table, Input, Space, Button, Tooltip, notification } from 'antd';
+import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
-import { SearchOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import ThirdPartyAppsBar from './ThirdPartyAppsBar';
 import ThirdPartyAppsActions from './ThirdPartyAppsActions';
 import Bundle from '../../models/bundle';
 import useTypedSelector from '../../hooks/useTypedSelector';
 import useActions from '../../hooks/useActions';
+import userPool from '../../userPool';
 
 const { Title } = Typography;
 
 const ThirdPartyApps: React.FC = () => {
     const { bundles, error: errorLoading } = useTypedSelector(state => state.bundle);
-    const { fetchBundles, addBundle, deleteBundle } = useActions();
+    const { fetchBundles, addBundle, deleteBundle, userLogout } = useActions();
     // TODO what the fuck is going on here????
     // const memoFetchBundles = useCallback(() => fetchBundles, [fetchBundles]);
 
@@ -125,6 +126,10 @@ const ThirdPartyApps: React.FC = () => {
             icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
         });
     };
+    const signOut = () => {
+        const currentUser = userPool.getCurrentUser();
+        userLogout(currentUser!);
+    };
 
     useEffect(() => {
         fetchBundles();
@@ -134,6 +139,7 @@ const ThirdPartyApps: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
+            {/* <button type="button" onClick={signOut}>Sign out</button> */}
             <ThirdPartyAppsBar bundles={bundles} addBundle={addBundle} />
             <Table
                 rowKey={record => record.app_name}

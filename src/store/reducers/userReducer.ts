@@ -22,8 +22,10 @@ const priceReducer = (state = defaultState, action: UserAction): UserState => {
         return { ...state, error: null, forceChangePassword: false, isLoggedIn: true };
     }
     case UserActionTypes.USER_LOGIN_ERROR: {
-        console.log(action.payload);
         return { ...state, error: action.payload };
+    }
+    case UserActionTypes.USER_LOGOUT: {
+        return { ...state, error: null, isLoggedIn: false, user: null };
     }
     default:
         return state;

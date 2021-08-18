@@ -13,6 +13,7 @@ export enum UserActionTypes {
     USER_LOGIN_CHANGE_PASSWORD = 'USER_LOGIN_CHANGE_PASSWORD',
     USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS',
     USER_LOGIN_ERROR = 'USER_LOGIN_ERROR',
+    USER_LOGOUT = 'USER_LOGOUT',
 }
 
 interface UserLoginAction {
@@ -37,9 +38,14 @@ interface UserLoginErrorAction {
     payload: any;
 }
 
+interface UserLogoutAction {
+    type: UserActionTypes.USER_LOGOUT;
+}
+
 export type UserAction =
     UserLoginAction |
     UserLoginForceChangePasswordAction |
     UserLoginChangePasswordAction |
     UserLoginSuccessAction |
-    UserLoginErrorAction;
+    UserLoginErrorAction |
+    UserLogoutAction;
