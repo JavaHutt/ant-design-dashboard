@@ -31,6 +31,7 @@ interface UserLoginChangePasswordAction {
 
 interface UserLoginSuccessAction {
     type: UserActionTypes.USER_LOGIN_SUCCESS;
+    payload: CognitoUser;
 }
 
 interface UserLoginErrorAction {

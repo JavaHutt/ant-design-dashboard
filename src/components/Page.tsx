@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
+import MenuProfile from './auth/MenuProfile';
 import ThirdPartyApps from './third-party-apps/ThirdPartyApps';
 import Prices from './apps-prices/Prices';
 import styles from './Page.module.scss';
@@ -9,8 +10,8 @@ const { Header, Content, Footer } = Layout;
 const Page: React.FC = () => (
     <Router>
         <Layout className="layout">
-            <Header>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+            <Header className={styles.header}>
+                <Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
                     <Menu.Item key="1">
                         <span>Prices</span>
                         <Link to="/prices" />
@@ -20,6 +21,7 @@ const Page: React.FC = () => (
                         <Link to="/third-party-apps" />
                     </Menu.Item>
                 </Menu>
+                <MenuProfile />
             </Header>
             <Content style={{ padding: '0 50px' }}>
                 <div className={styles['site-layout-content']}>

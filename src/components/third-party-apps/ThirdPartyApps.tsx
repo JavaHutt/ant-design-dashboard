@@ -8,13 +8,12 @@ import ThirdPartyAppsActions from './ThirdPartyAppsActions';
 import Bundle from '../../models/bundle';
 import useTypedSelector from '../../hooks/useTypedSelector';
 import useActions from '../../hooks/useActions';
-import userPool from '../../userPool';
 
 const { Title } = Typography;
 
 const ThirdPartyApps: React.FC = () => {
     const { bundles, error: errorLoading } = useTypedSelector(state => state.bundle);
-    const { fetchBundles, addBundle, deleteBundle, userLogout } = useActions();
+    const { fetchBundles, addBundle, deleteBundle } = useActions();
     // TODO what the fuck is going on here????
     // const memoFetchBundles = useCallback(() => fetchBundles, [fetchBundles]);
 
@@ -126,10 +125,6 @@ const ThirdPartyApps: React.FC = () => {
             icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
         });
     };
-    const signOut = () => {
-        const currentUser = userPool.getCurrentUser();
-        userLogout(currentUser!);
-    };
 
     useEffect(() => {
         fetchBundles();
@@ -139,7 +134,6 @@ const ThirdPartyApps: React.FC = () => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            {/* <button type="button" onClick={signOut}>Sign out</button> */}
             <ThirdPartyAppsBar bundles={bundles} addBundle={addBundle} />
             <Table
                 rowKey={record => record.app_name}

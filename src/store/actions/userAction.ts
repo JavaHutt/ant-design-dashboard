@@ -4,8 +4,8 @@ import userPool from '../../userPool';
 import { UserAction, UserActionTypes } from '../types/user';
 import LoginValues from '../../models/user';
 
-const successLogin = (data: CognitoUserSession, dispatch: Dispatch<UserAction>) => {
-    dispatch({ type: UserActionTypes.USER_LOGIN_SUCCESS });
+const successLogin = (user: CognitoUser, dispatch: Dispatch<UserAction>) => {
+    dispatch({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
 };
 
 export const userLogout = (user: CognitoUser) => {
@@ -28,7 +28,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
         try {
             dispatch({ type: UserActionTypes.USER_LOGIN, payload: user });
             user.authenticateUser(authDetails, {
-                onSuccess: data => successLogin(data, dispatch),
+                onSuccess: () => successLogin(user, dispatch),
                 onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
                 newPasswordRequired: () => dispatch({ type: UserActionTypes.USER_LOGIN_FORCE_CHANGE_PASSWORD }),
             });
@@ -44,7 +44,7 @@ export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN
 export const userChangePassword = (user: CognitoUser, newPassword: string) => async (dispatch: Dispatch<UserAction>) => {
     try {
         user.completeNewPasswordChallenge(newPassword, null, {
-            onSuccess: data => successLogin(data, dispatch),
+            onSuccess: () => successLogin(user, dispatch),
             onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
         });
     } catch (e) {
@@ -62,7 +62,7 @@ export const firstLogin = () => {
         if (error) return ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: error });
         const tokenExpire = session.getAccessToken().getExpiration();
         if (Date.now() > tokenExpire * 1000) return userLogout(currentUser);
-        return ({ type: UserActionTypes.USER_LOGIN_SUCCESS });
+        return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
     });
-    return ({ type: UserActionTypes.USER_LOGIN_SUCCESS });
+    return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
 };

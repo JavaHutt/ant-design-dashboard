@@ -1,7 +1,8 @@
 import { UserState, UserAction, UserActionTypes } from '../types/user';
+import userPool from '../../userPool';
 
 const defaultState: UserState = {
-    user: null,
+    user: userPool.getCurrentUser(),
     isLoggedIn: false,
     forceChangePassword: false,
     error: null,
@@ -19,7 +20,7 @@ const priceReducer = (state = defaultState, action: UserAction): UserState => {
         return { ...state, error: null, forceChangePassword: false, isLoggedIn: true };
     }
     case UserActionTypes.USER_LOGIN_SUCCESS: {
-        return { ...state, error: null, forceChangePassword: false, isLoggedIn: true };
+        return { ...state, error: null, forceChangePassword: false, isLoggedIn: true, user: action.payload };
     }
     case UserActionTypes.USER_LOGIN_ERROR: {
         return { ...state, error: action.payload };
