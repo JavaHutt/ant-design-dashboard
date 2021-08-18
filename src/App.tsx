@@ -6,11 +6,11 @@ import Page from './components/Page';
 import './App.css';
 
 const App = () => {
-    const { isLoggedIn } = useTypedSelector(state => state.user);
+    const { isLoggedIn, user } = useTypedSelector(state => state.user);
     const { firstLogin } = useActions();
 
     useEffect(() => {
-        firstLogin();
+        firstLogin(user);
     }, []);
 
     return (

@@ -8,8 +8,8 @@ const successLogin = (user: CognitoUser, dispatch: Dispatch<UserAction>) => {
     dispatch({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
 };
 
-export const userLogout = (user: CognitoUser) => {
-    user.signOut();
+export const userLogout = (user: CognitoUser | null) => {
+    user?.signOut();
     return ({ type: UserActionTypes.USER_LOGOUT });
 };
 
@@ -52,12 +52,9 @@ export const userChangePassword = (user: CognitoUser, newPassword: string) => as
     }
 };
 
-export const firstLogin = () => {
-    const currentUser = userPool.getCurrentUser();
+export const firstLogin = (currentUser: CognitoUser | null) => {
+    if (!currentUser) return userLogout(null);
 
-    if (!currentUser) {
-        return ({ type: UserActionTypes.USER_LOGOUT });
-    }
     currentUser.getSession((error: any, session: CognitoUserSession) => {
         if (error) return ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: error });
         const tokenExpire = session.getAccessToken().getExpiration();
