@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import MenuProfile from './auth/MenuProfile';
-import ThirdPartyApps from './third-party-apps/ThirdPartyApps';
-import Prices from './apps-prices/Prices';
+import Bundles from './bundles/Bundles';
 import styles from './Page.module.scss';
 
 const { Header, Content, Footer } = Layout;
@@ -13,22 +12,17 @@ const Page: React.FC = () => (
             <Header className={styles.header}>
                 <Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
                     <Menu.Item key="1">
-                        <span>Prices</span>
-                        <Link to="/prices" />
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                        <span>3rd Party Apps</span>
-                        <Link to="/third-party-apps" />
+                        <span>Bundles</span>
+                        <Link to="/bundles" />
                     </Menu.Item>
                 </Menu>
                 <MenuProfile />
             </Header>
             <Content style={{ padding: '0 50px' }}>
                 <div className={styles['site-layout-content']}>
-                    <Route path="/prices" component={Prices} />
-                    <Route path="/third-party-apps" component={ThirdPartyApps} />
+                    <Route path="/bundles" component={Bundles} />
                     <Route exact path="/">
-                        <Redirect to="/third-party-apps" />
+                        <Redirect to="/bundles" />
                     </Route>
                 </div>
             </Content>

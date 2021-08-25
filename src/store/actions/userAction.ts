@@ -57,8 +57,10 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
 
     currentUser.getSession((error: any, session: CognitoUserSession) => {
         if (error) return ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: error });
+
         const tokenExpire = session.getAccessToken().getExpiration();
         if (Date.now() > tokenExpire * 1000) return userLogout(currentUser);
+
         return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
     });
     return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });

@@ -6,7 +6,7 @@ import api from '../../api';
 export const fetchBundles = () => (
     async (dispatch: Dispatch<BundleAction>) => {
         try {
-            const res = await api.get<Bundle[]>('third-party-apps/urls');
+            const res = await api.get<Bundle[]>('third-party-apps/bundles');
             dispatch({ type: BundleActionTypes.FETCH_BUNDLES, payload: res.data });
         } catch (e) {
             dispatch({ type: BundleActionTypes.FETCH_BUNDLES_ERROR, payload: e.message });

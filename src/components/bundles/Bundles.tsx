@@ -11,7 +11,7 @@ import useActions from '../../hooks/useActions';
 
 const { Title } = Typography;
 
-const ThirdPartyApps: React.FC = () => {
+const Bundles: React.FC = () => {
     const { bundles, error: errorLoading } = useTypedSelector(state => state.bundle);
     const { fetchBundles, addBundle, deleteBundle } = useActions();
     // TODO what the fuck is going on here????
@@ -75,9 +75,9 @@ const ThirdPartyApps: React.FC = () => {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) => record[dataIndex as keyof Bundle]
-            ? record[dataIndex as keyof Bundle]!.toLowerCase().includes(value.toString().toLowerCase())
-            : false,
+        // onFilter: (value, record) => record[dataIndex as keyof Bundle]
+        //     ? record[dataIndex as keyof Bundle]!.includes(value.toString().toLowerCase())
+        //     : false,
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
                 setTimeout(() => searchInput!.select(), 100);
@@ -145,4 +145,4 @@ const ThirdPartyApps: React.FC = () => {
     );
 };
 
-export default ThirdPartyApps;
+export default Bundles;
