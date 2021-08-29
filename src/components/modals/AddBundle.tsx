@@ -13,6 +13,7 @@ const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
+    // TODO make "values" argument
     const handleOk = (bundle: Bundle) => {
         addBundle(bundle);
         setConfirmLoading(true);

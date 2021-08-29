@@ -14,8 +14,13 @@ interface CountryPrice {
     price: number;
 }
 
+interface DefaultPrice {
+    default_price: number;
+}
+
 export type {
     AppsPrices,
     Price,
     CountryPrice,
+    DefaultPrice,
 };

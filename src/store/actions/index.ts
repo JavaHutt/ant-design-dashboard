@@ -1,9 +1,9 @@
 import * as BundleActionCreators from './bundleAction';
-import * as PriceActionCreators from './priceAction';
+import * as DefaultPriceActionCreators from './defaultPriceAction';
 import * as UserActionCreators from './userAction';
 
 export default {
     ...BundleActionCreators,
-    ...PriceActionCreators,
+    ...DefaultPriceActionCreators,
     ...UserActionCreators,
 };

@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import bundleReducer from './bundleReducer';
-import priceReducer from './priceReducer';
+import defaultPriceReducer from './defaultPriceReducer';
 import userReducer from './userReducer';
 
 export const rootReducer = combineReducers({
     bundle: bundleReducer,
-    price: priceReducer,
+    defaultPrice: defaultPriceReducer,
     user: userReducer,
 });
 

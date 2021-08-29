@@ -6,7 +6,7 @@ import AddBundle from '../modals/AddBundle';
 import Bundle from '../../models/bundle';
 import { BundleActionTypes } from '../../store/types/bundle';
 
-interface ThirdPartyAppsBarProps {
+interface BundlesBarProps {
     bundles: Bundle[];
     addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
 }
@@ -16,7 +16,7 @@ interface BundleHeaders {
     key: keyof Bundle;
 }
 
-const ThirdPartyAppsBar: React.FC<ThirdPartyAppsBarProps> = ({ bundles, addBundle }) => {
+const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const csvHeaders: BundleHeaders[] = [
         { label: 'Bundle Name', key: 'app_name' },
@@ -44,4 +44,4 @@ const ThirdPartyAppsBar: React.FC<ThirdPartyAppsBarProps> = ({ bundles, addBundl
     );
 };
 
-export default ThirdPartyAppsBar;
+export default BundlesBar;

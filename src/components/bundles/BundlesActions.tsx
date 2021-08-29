@@ -8,7 +8,7 @@ interface ThirdPartyAppsActionsProps {
     deleteBundle: (key: string) => { type: BundleActionTypes; payload: string; },
 }
 
-const ThirdPartyAppsActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
+const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
     const handleDelete = (key: string) => {
         deleteBundle(key);
         notification.open({
@@ -32,4 +32,4 @@ const ThirdPartyAppsActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, d
     );
 };
 
-export default ThirdPartyAppsActions;
+export default BundlesActions;

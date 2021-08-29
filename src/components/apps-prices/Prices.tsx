@@ -13,8 +13,8 @@ import useTypedSelector from '../../hooks/useTypedSelector';
 const { Title, Text } = Typography;
 
 const Prices: React.FC = () => {
-    const { prices, defaultPrice, error: errorLoading } = useTypedSelector(state => state.price);
-    const { fetchPrices } = useActions();
+    const { defaultPrice, error: errorLoading } = useTypedSelector(state => state.defaultPrice);
+    const { fetchDefaultPrice } = useActions();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
@@ -119,31 +119,20 @@ const Prices: React.FC = () => {
 
     const notifyError = (description: string) => {
         notification.open({
-            message: 'Error loading prices',
+            message: 'Error loading',
             description,
             icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
         });
     };
 
     useEffect(() => {
-        fetchPrices();
+        fetchDefaultPrice();
         if (errorLoading) notifyError(errorLoading);
     }, [errorLoading]);
 
     return (
         <>
             <Title level={2}>Third Party Apps Prices</Title>
-            <PricesButtons prices={prices} />
-            <Table
-                rowKey={record => record.app_name}
-                dataSource={prices}
-                columns={columns}
-                pagination={{ pageSize }}
-                expandable={{
-                    expandedRowRender,
-                    rowExpandable,
-                }}
-            />
             {!errorLoading && (
                 <Text className={styles.footer}>
                     Note: for all other apps the price is <i>{defaultPrice}</i>
