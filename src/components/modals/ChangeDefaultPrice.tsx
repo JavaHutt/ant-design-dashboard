@@ -19,7 +19,9 @@ const ChangeDefaultPrice = ({ visible, setVisible, defaultPrice, changeDefaultPr
         const newDefaultPrice: DefaultPrice = {
             default_price: +values.default_price,
         };
+        setConfirmLoading(true);
         changeDefaultPrice(newDefaultPrice);
+        setConfirmLoading(false);
         notification.open({
             message: 'Success',
             description: 'Default price was successfully changed!',
