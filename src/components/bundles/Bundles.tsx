@@ -78,9 +78,6 @@ const Bundles: React.FC = () => {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        // onFilter: (value, record) => record[dataIndex]
-        //     ? record[dataIndex as keyof Bundle]!.includes(value.toString().toLowerCase())
-        //     : false,
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
                 setTimeout(() => searchInput!.select(), 100);
@@ -137,9 +134,9 @@ const Bundles: React.FC = () => {
         },
     ];
 
-    const notifyError = (description: string) => {
+    const notifyError = (message: string, description: string) => {
         notification.open({
-            message: 'Error loading',
+            message,
             description,
             icon: <ExclamationCircleOutlined style={{ color: '#108ee9' }} />,
         });
@@ -147,15 +144,22 @@ const Bundles: React.FC = () => {
 
     useEffect(() => {
         fetchBundles();
-        if (errorLoadingBundles) notifyError(errorLoadingBundles);
         fetchDefaultPrice();
-        if (errorLoadingDefaultPrice) notifyError(errorLoadingDefaultPrice);
-    }, [errorLoadingBundles, errorLoadingDefaultPrice]);
+    }, []);
+
+    // WHY THE FUCK IF I PUT THIS LOGIC INTO ONE USEEFFECT HOOK, IT NOTIFIES 3 TIMES?!
+    useEffect(() => {
+        if (errorLoadingBundles) notifyError('Error loading bundles', errorLoadingBundles);
+    }, [errorLoadingBundles]);
+
+    useEffect(() => {
+        if (errorLoadingDefaultPrice) notifyError('Error loading default price', errorLoadingDefaultPrice);
+    }, [errorLoadingDefaultPrice]);
 
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            <BundlesBar bundles={bundles} addBundle={addBundle} />
+            {bundles.length > 0 && <BundlesBar bundles={bundles} addBundle={addBundle} />}
             <Table
                 rowKey={record => record.id}
                 dataSource={bundles}
