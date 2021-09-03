@@ -8,7 +8,7 @@ import api from '../../api';
 // TODO not sure, maybe it should return async function...
 api.interceptors.request.use(req => {
     const { user } = store.getState();
-    user.user!.getSession((error: any, session: CognitoUserSession) => {
+    user.user?.getSession((error: any, session: CognitoUserSession) => {
         if (error) console.log(error);
         const token = session.getIdToken().getJwtToken();
         req.headers = {

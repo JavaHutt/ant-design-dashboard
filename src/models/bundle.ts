@@ -1,7 +1,7 @@
 import { CountryPrice } from './price';
 
 interface Bundle {
-    id: number;
+    id?: number;
     app_name: string;
     app_url: string;
     price_for_app?: number;

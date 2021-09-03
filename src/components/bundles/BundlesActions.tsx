@@ -5,14 +5,14 @@ import { BundleActionTypes } from '../../store/types/bundle';
 
 interface ThirdPartyAppsActionsProps {
     bundle: Bundle;
-    deleteBundle: (key: string) => { type: BundleActionTypes; payload: string; },
+    deleteBundle: (id: string) => { type: BundleActionTypes; payload: string; },
 }
 
 const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
-    const handleDelete = (key: string) => {
-        deleteBundle(key);
+    const handleDelete = (id: string) => {
+        deleteBundle(id);
         notification.open({
-            message: `${key} bundle deleted`,
+            message: `${id} bundle deleted`,
             icon: <CheckCircleOutlined style={{ color: '#108ee9' }} />,
         });
     };

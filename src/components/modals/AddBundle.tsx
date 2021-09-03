@@ -1,22 +1,27 @@
 import { useState } from 'react';
+import { Dispatch } from 'redux';
 import { Modal, Form, Input, Button } from 'antd';
 import Bundle from '../../models/bundle';
-import { BundleActionTypes } from '../../store/types/bundle';
+import { BundleAction } from '../../store/types/bundle';
 
 interface AddBundleProps {
-    visible: boolean,
-    setVisible: React.Dispatch<React.SetStateAction<boolean>>,
-    addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
+    visible: boolean;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
 }
 
 const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
-    // TODO make "values" argument
     const handleOk = (values: { [key: string]: string }) => {
-        console.log(values);
-        // addBundle(bundle);
+        const { app_name, app_url } = values;
+        const newBundle: Bundle = {
+            app_name,
+            app_url,
+        };
+        addBundle(newBundle);
+        setVisible(false);       
         // setConfirmLoading(true);
         // setTimeout(() => {
         //     setVisible(false);

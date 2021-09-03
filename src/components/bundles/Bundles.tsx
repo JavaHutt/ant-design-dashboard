@@ -161,7 +161,7 @@ const Bundles: React.FC = () => {
             <Title level={2}>Third Party Apps</Title>
             {bundles.length > 0 && <BundlesBar bundles={bundles} addBundle={addBundle} />}
             <Table
-                rowKey={record => record.id}
+                rowKey={record => record.id!}
                 dataSource={bundles}
                 columns={columns}
                 pagination={{ pageSize }}

@@ -1,14 +1,15 @@
 import { useState } from 'react';
+import { Dispatch } from 'redux';
 import { CSVLink } from 'react-csv';
 import { Button, Tooltip, Space } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
 import AddBundle from '../modals/AddBundle';
 import Bundle from '../../models/bundle';
-import { BundleActionTypes } from '../../store/types/bundle';
+import { BundleAction } from '../../store/types/bundle';
 
 interface BundlesBarProps {
     bundles: Bundle[];
-    addBundle: (bundle: Bundle) => { type: BundleActionTypes; payload: Bundle; },
+    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
 }
 
 interface BundleHeaders {
@@ -28,7 +29,7 @@ const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle }) => {
     return (
         <Space style={{ marginBottom: 16, display: 'flex' }}>
             <Button onClick={handleAdd} type="primary">
-                Add a bundle
+                Add bundle
             </Button>
             <CSVLink data={bundles} headers={csvHeaders} filename="third_party_apps.csv">
                 <Tooltip title="Download CSV">
