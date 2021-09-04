@@ -53,6 +53,7 @@ export const userChangePassword = (user: CognitoUser, newPassword: string) => as
 };
 
 export const firstLogin = (currentUser: CognitoUser | null) => {
+    console.log('current user from first login: ', currentUser);
     if (!currentUser) return userLogout(null);
 
     currentUser.getSession((error: any, session: CognitoUserSession) => {

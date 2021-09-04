@@ -15,7 +15,7 @@ const bundleReducer = (state = defaultState, action: BundleAction): BundleState 
     case BundleActionTypes.FETCH_BUNDLES_ERROR:
         return { ...state, error: action.payload, loading: false };
     case BundleActionTypes.ADD_BUNDLE_REQUEST:
-            return { ...state, loading: true };
+        return { ...state, loading: true };
     case BundleActionTypes.ADD_BUNDLE_SUCCESS:
         return { ...state, bundles: [...state.bundles, action.payload], loading: false, error: null };
     case BundleActionTypes.ADD_BUNDLE_ERROR:

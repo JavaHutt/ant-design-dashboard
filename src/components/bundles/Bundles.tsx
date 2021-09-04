@@ -1,23 +1,44 @@
 import { useState, useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect } from 'react-redux';
 import Highlighter from 'react-highlight-words';
 import { Typography, Table, Input, Space, Button, notification } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { RootState } from '../../store/reducers';
+import * as BundleActionCreators from '../../store/actions/bundleAction';
+import * as DefaultPriceActionCreators from '../../store/actions/defaultPriceAction';
 import styles from './Bundles.module.scss';
 import BundlesBar from './BundlesBar';
 import BundlesActions from './BundlesActions';
 import ChangeDefaultPrice from '../modals/ChangeDefaultPrice';
 import Bundle from '../../models/bundle';
 import CountryPrices from './CountryPrices';
-import useTypedSelector from '../../hooks/useTypedSelector';
-import useActions from '../../hooks/useActions';
 
 const { Title, Text } = Typography;
 
-const Bundles: React.FC = () => {
-    const { bundles, error: errorLoadingBundles } = useTypedSelector(state => state.bundle);
-    const { defaultPrice, error: errorLoadingDefaultPrice } = useTypedSelector(state => state.defaultPrice);
-    const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = useActions();
+const mapStateToProps = (state: RootState) => ({
+    bundleState: state.bundle,
+    defaultPriceState: state.defaultPrice,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    const boundActions = bindActionCreators({ ...BundleActionCreators, ...DefaultPriceActionCreators }, dispatch);
+    return {
+        ...boundActions,
+    };
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+type BundlesProps = StateProps & DispatchProps;
+
+const Bundles: React.FC<BundlesProps> = props => {
+    const { bundleState, defaultPriceState } = props;
+    const { bundles, error: errorLoadingBundles } = bundleState;
+    const { defaultPrice, error: errorLoadingDefaultPrice } = defaultPriceState;
+    const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -192,4 +213,4 @@ const Bundles: React.FC = () => {
     );
 };
 
-export default Bundles;
+export default connect(mapStateToProps, mapDispatchToProps)(Bundles);
