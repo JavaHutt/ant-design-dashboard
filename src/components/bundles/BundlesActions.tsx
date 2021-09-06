@@ -1,18 +1,19 @@
+import { Dispatch } from 'redux';
 import { Space, Button, Popconfirm, notification } from 'antd';
 import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
-import { BundleActionTypes } from '../../store/types/bundle';
+import { BundleAction } from '../../store/types/bundle';
 
 interface ThirdPartyAppsActionsProps {
     bundle: Bundle;
-    deleteBundle: (id: string) => { type: BundleActionTypes; payload: string; },
+    deleteBundle: (id: number) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
 }
 
 const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
-    const handleDelete = (id: string) => {
+    const handleDelete = (id: number, appName: string) => {
         deleteBundle(id);
         notification.open({
-            message: `${id} bundle deleted`,
+            message: `${appName} bundle deleted`,
             icon: <CheckCircleOutlined style={{ color: '#108ee9' }} />,
         });
     };
@@ -22,7 +23,7 @@ const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBu
             <Popconfirm
                 placement="topRight"
                 title="Are you sure to delete this bundle?"
-                onConfirm={() => handleDelete(bundle.app_name)}
+                onConfirm={() => handleDelete(bundle.id!, bundle.app_name)}
                 okText="Yes"
                 cancelText="No"
             >

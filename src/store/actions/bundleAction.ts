@@ -37,7 +37,6 @@ export const addBundle = (bundle: Bundle) => (
 
         try {
             const res = await api.post<Bundle>('third-party-apps/bundles', bundle);
-            console.log('res: ', res.data);
             dispatch({ type: BundleActionTypes.ADD_BUNDLE_SUCCESS, payload: res.data });
         } catch (e) {
             dispatch({ type: BundleActionTypes.ADD_BUNDLE_ERROR, payload: e.message });
@@ -45,4 +44,15 @@ export const addBundle = (bundle: Bundle) => (
     }
 );
 
-export const deleteBundle = (id: string) => ({ type: BundleActionTypes.DELETE_BUNDLE, payload: id });
+export const deleteBundle = (id: number) => (
+    async (dispatch: Dispatch<BundleAction>) => {
+        dispatch({ type: BundleActionTypes.DELETE_BUNDLE_REQUEST });
+
+        try {
+            await api.delete(`third-party-apps/bundles/${id}`);
+            dispatch({ type: BundleActionTypes.DELETE_BUNDLE_SUCCESS, payload: id });
+        } catch (e) {
+            dispatch({ type: BundleActionTypes.DELETE_BUNDLE_ERROR, payload: e.message });
+        }
+    }
+);

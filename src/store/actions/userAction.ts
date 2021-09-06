@@ -9,7 +9,10 @@ const successLogin = (user: CognitoUser, dispatch: Dispatch<UserAction>) => {
 };
 
 export const userLogout = (user: CognitoUser | null) => {
-    user?.signOut();
+    console.log('logout')
+    user?.signOut(() => {
+        return ({ type: UserActionTypes.USER_LOGOUT });
+    });
     return ({ type: UserActionTypes.USER_LOGOUT });
 };
 
@@ -57,10 +60,15 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
     if (!currentUser) return userLogout(null);
 
     currentUser.getSession((error: any, session: CognitoUserSession) => {
-        if (error) return ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: error });
-
-        const tokenExpire = session.getAccessToken().getExpiration();
-        if (Date.now() > tokenExpire * 1000) return userLogout(currentUser);
+        console.log('get session err: ', error);
+        if (error) return userLogout(currentUser);
+        
+        const tokenExpire = session.getIdToken().getExpiration();
+        console.log('expire number: ', tokenExpire);
+        if (Date.now() > tokenExpire * 1000) {
+            console.log('token expire');
+            return userLogout(currentUser);
+        }
 
         return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
     });

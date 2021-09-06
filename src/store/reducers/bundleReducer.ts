@@ -20,10 +20,14 @@ const bundleReducer = (state = defaultState, action: BundleAction): BundleState 
         return { ...state, bundles: [...state.bundles, action.payload], loading: false, error: null };
     case BundleActionTypes.ADD_BUNDLE_ERROR:
         return { ...state, error: action.payload, loading: false };
-    case BundleActionTypes.DELETE_BUNDLE: {
-        const bundles = state.bundles.filter(bundle => bundle.app_name !== action.payload);
+    case BundleActionTypes.DELETE_BUNDLE_REQUEST:
+        return { ...state, loading: true };
+    case BundleActionTypes.DELETE_BUNDLE_SUCCESS: {
+        const bundles = state.bundles.filter(bundle => bundle.id !== action.payload);
         return { ...state, bundles, loading: false, error: null };
     }
+    case BundleActionTypes.DELETE_BUNDLE_ERROR:
+        return { ...state, error: action.payload, loading: false };
     default:
         return state;
     }
