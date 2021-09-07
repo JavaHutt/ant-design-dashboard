@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RootState } from './store/reducers';
 import { firstLogin } from './store/actions/userAction';
@@ -8,12 +9,15 @@ import './App.css';
 
 const mapStateToProps = (state: RootState) => ({ userState: state.user });
 
-const mapDispatchToProps = {
-    firstLogin,
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    const userActions = bindActionCreators({ firstLogin }, dispatch);
+    return {
+        ...userActions,
+    };
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 type AppProps = StateProps & DispatchProps;
 

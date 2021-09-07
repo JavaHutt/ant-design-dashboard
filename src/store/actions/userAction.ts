@@ -8,12 +8,12 @@ const successLogin = (user: CognitoUser, dispatch: Dispatch<UserAction>) => {
     dispatch({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
 };
 
-export const userLogout = (user: CognitoUser | null) => {
-    console.log('logout')
+export const userLogout = (user: CognitoUser | null, dispatch: Dispatch<UserAction>) => {
+    console.log('logout');
     user?.signOut(() => {
-        return ({ type: UserActionTypes.USER_LOGOUT });
+        dispatch({ type: UserActionTypes.USER_LOGOUT });
     });
-    return ({ type: UserActionTypes.USER_LOGOUT });
+    dispatch({ type: UserActionTypes.USER_LOGOUT });
 };
 
 export const userLogin = ({ username, password }: LoginValues) => {
@@ -55,22 +55,25 @@ export const userChangePassword = (user: CognitoUser, newPassword: string) => as
     }
 };
 
-export const firstLogin = (currentUser: CognitoUser | null) => {
+export const firstLogin = (currentUser: CognitoUser | null) => async (dispatch: Dispatch<UserAction>) => {
     console.log('current user from first login: ', currentUser);
-    if (!currentUser) return userLogout(null);
+    if (!currentUser) return userLogout(null, dispatch);
 
-    currentUser.getSession((error: any, session: CognitoUserSession) => {
-        console.log('get session err: ', error);
-        if (error) return userLogout(currentUser);
-        
-        const tokenExpire = session.getIdToken().getExpiration();
-        console.log('expire number: ', tokenExpire);
-        if (Date.now() > tokenExpire * 1000) {
-            console.log('token expire');
-            return userLogout(currentUser);
-        }
-
-        return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
-    });
-    return ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: currentUser });
+    try {
+        currentUser.getSession((error: any, session: CognitoUserSession) => {
+            console.log('get session err: ', error);
+            if (error) return userLogout(currentUser, dispatch);
+            
+            const tokenExpire = session.getIdToken().getExpiration();
+            console.log('expire number: ', tokenExpire);
+            if (Date.now() > tokenExpire * 1000) {
+                console.log('token expire');
+                return userLogout(currentUser, dispatch);
+            }
+            console.log('success dispatch 1');
+            return successLogin(currentUser, dispatch);
+        });
+    } catch (e) {
+        userError(e);
+    }
 };

@@ -26,6 +26,7 @@ const priceReducer = (state = defaultState, action: UserAction): UserState => {
         return { ...state, error: action.payload };
     }
     case UserActionTypes.USER_LOGOUT: {
+        console.log('logout reducer');
         const obj = { ...state, error: null, isLoggedIn: false, user: null };
         console.log(obj);
         return obj;
