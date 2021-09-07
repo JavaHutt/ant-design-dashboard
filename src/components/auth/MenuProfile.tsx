@@ -11,13 +11,13 @@ const MenuProfile: React.FC = () => {
         return payload && payload.email;
     };
 
-    // const handleLogout = () => userLogout(user!, dispatch);
+    const handleLogout = () => userLogout(user!);
 
     return (
         <div>
             <Space>
                 <span style={{ color: 'white' }}>{getUserEmail()}</span>
-                {/* <a href="#" onClick={handleLogout}>Logout</a> */}
+                <a href="#" onClick={handleLogout}>Logout</a>
             </Space>
         </div>
     );
