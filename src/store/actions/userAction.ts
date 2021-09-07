@@ -2,9 +2,11 @@ import { Dispatch } from 'redux';
 import { CognitoUser, AuthenticationDetails, CookieStorage, CognitoUserSession } from 'amazon-cognito-identity-js';
 import userPool from '../../userPool';
 import { UserAction, UserActionTypes } from '../types/user';
-import LoginValues from '../../models/user';
+import { LoginValues } from '../../models/user';
 
-const successLogin = (user: CognitoUser) => ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
+const successLogin = (userData : { user: CognitoUser, session: CognitoUserSession, }): UserAction => {
+    return { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData };
+};
 
 export const userLogout = (user: CognitoUser | null): UserAction => {
     // TODO async or not?
@@ -28,7 +30,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
         try {
             dispatch({ type: UserActionTypes.USER_LOGIN, payload: user });
             user.authenticateUser(authDetails, {
-                onSuccess: () => dispatch(successLogin(user)),
+                onSuccess: session => dispatch(successLogin({ user, session })),
                 onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
                 newPasswordRequired: () => dispatch({ type: UserActionTypes.USER_LOGIN_FORCE_CHANGE_PASSWORD }),
             });
@@ -43,7 +45,7 @@ export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN
 export const userChangePassword = (user: CognitoUser, newPassword: string) => async (dispatch: Dispatch<UserAction>) => {
     try {
         user.completeNewPasswordChallenge(newPassword, null, {
-            onSuccess: () => dispatch(successLogin(user)),
+            onSuccess: session => dispatch(successLogin({ user, session })),
             onFailure: (err: any) => dispatch(userError(err)),
         });
     } catch (e) {
@@ -59,9 +61,13 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
         try {
             currentUser.getSession((error: any, session: CognitoUserSession) => {
                 console.log('get session err: ', error);
-                if (error) dispatch(userError(error));
+                if (error) {
+                    dispatch(userError(error));
+                    return;
+                };
                 
                 const tokenExpire = session.getIdToken().getExpiration();
+                console.log('decode payload:', session.getIdToken().decodePayload());
                 console.log('expire number: ', tokenExpire);
                 if (Date.now() > tokenExpire * 1000) {
                     console.log('token expire');
@@ -69,7 +75,7 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
                     return;
                 }
                 console.log('success dispatch 1');
-                dispatch(successLogin(currentUser));
+                dispatch(successLogin({ user: currentUser, session }));
             });
         } catch (e) {
             dispatch(userError(e));

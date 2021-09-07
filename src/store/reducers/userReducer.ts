@@ -3,6 +3,7 @@ import userPool from '../../userPool';
 
 const defaultState: UserState = {
     user: userPool.getCurrentUser(),
+    groups: [],
     isLoggedIn: false,
     forceChangePassword: false,
     error: null,
@@ -20,16 +21,16 @@ const priceReducer = (state = defaultState, action: UserAction): UserState => {
         return { ...state, error: null, forceChangePassword: false, isLoggedIn: true };
     }
     case UserActionTypes.USER_LOGIN_SUCCESS: {
-        return { ...state, error: null, forceChangePassword: false, isLoggedIn: true, user: action.payload };
+        const { user, session } = action.payload;
+        const groups = session.getIdToken().decodePayload()['cognito:groups'];
+
+        return { ...state, error: null, forceChangePassword: false, isLoggedIn: true, user, groups };
     }
     case UserActionTypes.USER_LOGIN_ERROR: {
         return { ...state, error: action.payload };
     }
     case UserActionTypes.USER_LOGOUT: {
-        console.log('logout reducer');
-        const obj = { ...state, error: null, isLoggedIn: false, user: null };
-        console.log(obj);
-        return obj;
+        return { ...state, error: null, isLoggedIn: false, user: null };
     }
     default:
         return state;

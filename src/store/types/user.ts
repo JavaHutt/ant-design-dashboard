@@ -1,7 +1,9 @@
-import { CognitoUser } from 'amazon-cognito-identity-js';
+import { CognitoUser, CognitoUserSession } from 'amazon-cognito-identity-js';
+import { UserGroups } from '../../models/user';
 
 export interface UserState {
     user: CognitoUser | null;
+    groups: UserGroups[];
     isLoggedIn: boolean;
     forceChangePassword: boolean;
     error: any;
@@ -31,7 +33,10 @@ interface UserLoginChangePasswordAction {
 
 interface UserLoginSuccessAction {
     type: UserActionTypes.USER_LOGIN_SUCCESS;
-    payload: CognitoUser;
+    payload: {
+        user: CognitoUser,
+        session: CognitoUserSession,
+    };
 }
 
 interface UserLoginErrorAction {

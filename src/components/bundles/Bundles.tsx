@@ -14,10 +14,12 @@ import BundlesActions from './BundlesActions';
 import ChangeDefaultPrice from '../modals/ChangeDefaultPrice';
 import Bundle from '../../models/bundle';
 import CountryPrices from './CountryPrices';
+import { isAdmin } from '../../models/user';
 
 const { Title, Text } = Typography;
 
 const mapStateToProps = (state: RootState) => ({
+    userState: state.user,
     bundleState: state.bundle,
     defaultPriceState: state.defaultPrice,
 });
@@ -35,7 +37,8 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type BundlesProps = StateProps & DispatchProps;
 
 const Bundles: React.FC<BundlesProps> = props => {
-    const { bundleState, defaultPriceState } = props;
+    const { userState, bundleState, defaultPriceState } = props;
+    const { groups } = userState;
     const { bundles, error: errorLoadingBundles } = bundleState;
     const { defaultPrice, error: errorLoadingDefaultPrice } = defaultPriceState;
     const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
@@ -151,7 +154,9 @@ const Bundles: React.FC<BundlesProps> = props => {
             title: 'Action',
             key: 'action',
             width: '10%',
-            render: record => <BundlesActions bundle={record} deleteBundle={deleteBundle} />,
+            render: record => {
+               if (isAdmin(groups)) return <BundlesActions bundle={record} deleteBundle={deleteBundle} />;
+            },
         },
     ];
 
@@ -180,7 +185,7 @@ const Bundles: React.FC<BundlesProps> = props => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            {bundles.length > 0 && <BundlesBar bundles={bundles} addBundle={addBundle} />}
+            {bundles.length > 0 && isAdmin(groups) && <BundlesBar bundles={bundles} addBundle={addBundle} />}
             <Table
                 rowKey={record => record.id!}
                 dataSource={bundles}

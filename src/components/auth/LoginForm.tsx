@@ -1,10 +1,8 @@
 import { Dispatch } from 'redux';
 import { Form, Input, Button, Checkbox, Alert } from 'antd';
-import LoginValues from '../../models/user';
+import { LoginValues } from '../../models/user';
 import { UserAction } from '../../store/types/user';
 import styles from './Login.module.scss';
-import useActions from '../../hooks/useActions';
-import useTypedSelector from '../../hooks/useTypedSelector';
 
 interface onFinishValues {
     username: string;
