@@ -4,12 +4,10 @@ import userPool from '../../userPool';
 import { UserAction, UserActionTypes } from '../types/user';
 import LoginValues from '../../models/user';
 
-// TODO just return plain object or dispatch it?
-const successLogin = (user: CognitoUser, dispatch: Dispatch<UserAction>) => {
-    dispatch({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
-};
+const successLogin = (user: CognitoUser) => ({ type: UserActionTypes.USER_LOGIN_SUCCESS, payload: user });
 
-export const userLogout = (user: CognitoUser | null) => {
+export const userLogout = (user: CognitoUser | null): UserAction => {
+    // TODO async or not?
     user?.signOut(() => { console.log('sign out callback') });
     console.log('user logout after callback');
     return { type: UserActionTypes.USER_LOGOUT };
@@ -30,13 +28,12 @@ export const userLogin = ({ username, password }: LoginValues) => {
         try {
             dispatch({ type: UserActionTypes.USER_LOGIN, payload: user });
             user.authenticateUser(authDetails, {
-                onSuccess: () => successLogin(user, dispatch),
+                onSuccess: () => dispatch(successLogin(user)),
                 onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
                 newPasswordRequired: () => dispatch({ type: UserActionTypes.USER_LOGIN_FORCE_CHANGE_PASSWORD }),
             });
         } catch (e) {
-            console.log('error', e);
-            dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: e });
+            dispatch(userError(e));
         }
     };
 };
@@ -46,11 +43,11 @@ export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN
 export const userChangePassword = (user: CognitoUser, newPassword: string) => async (dispatch: Dispatch<UserAction>) => {
     try {
         user.completeNewPasswordChallenge(newPassword, null, {
-            onSuccess: () => successLogin(user, dispatch),
-            onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
+            onSuccess: () => dispatch(successLogin(user)),
+            onFailure: (err: any) => dispatch(userError(err)),
         });
     } catch (e) {
-        dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: e });
+        dispatch(userError(e));
     }
 };
 
@@ -62,19 +59,20 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
         try {
             currentUser.getSession((error: any, session: CognitoUserSession) => {
                 console.log('get session err: ', error);
-                if (error) return userLogout(currentUser);
+                if (error) dispatch(userError(error));
                 
                 const tokenExpire = session.getIdToken().getExpiration();
                 console.log('expire number: ', tokenExpire);
                 if (Date.now() > tokenExpire * 1000) {
                     console.log('token expire');
-                    return userLogout(currentUser);
+                    dispatch(userLogout(currentUser));
+                    return;
                 }
                 console.log('success dispatch 1');
-                return successLogin(currentUser, dispatch);
+                dispatch(successLogin(currentUser));
             });
         } catch (e) {
-            userError(e);
+            dispatch(userError(e));
         }
     }
 };
