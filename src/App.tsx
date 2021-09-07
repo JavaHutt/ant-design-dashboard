@@ -1,13 +1,26 @@
-import { useEffect } from 'react';
-import useTypedSelector from './hooks/useTypedSelector';
-import useActions from './hooks/useActions';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { RootState } from './store/reducers';
+import { firstLogin } from './store/actions/userAction';
 import Login from './components/auth/Login';
 import Page from './components/Page';
 import './App.css';
 
-const App = () => {
-    const { isLoggedIn, user } = useTypedSelector(state => state.user);
-    const { firstLogin } = useActions();
+const mapStateToProps = (state: RootState) => ({ userState: state.user });
+
+const mapDispatchToProps = {
+    firstLogin,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+type AppProps = StateProps & DispatchProps;
+
+const App: React.FC<AppProps> = props => {
+    const { userState } = props;
+    const { isLoggedIn, user } = userState;
+    const { firstLogin } = props;
 
     useEffect(() => {
         firstLogin(user);
@@ -20,4 +33,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

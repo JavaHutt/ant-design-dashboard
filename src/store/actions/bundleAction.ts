@@ -7,6 +7,7 @@ import api from '../../api';
 
 // TODO not sure, maybe it should return async function...
 api.interceptors.request.use(req => {
+    console.log('interceptor invoked');
     const { user } = store.getState();
     user.user?.getSession((error: any, session: CognitoUserSession) => {
         if (error) console.log(error);
