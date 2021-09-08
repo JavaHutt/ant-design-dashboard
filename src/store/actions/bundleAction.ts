@@ -1,27 +1,24 @@
 import { Dispatch } from 'redux';
-import { CognitoUserSession } from 'amazon-cognito-identity-js';
+import axios from 'axios';
 import { BundleAction, BundleActionTypes } from '../types/bundle';
-import store from '../index';
 import Bundle from '../../models/bundle';
-import api from '../../api';
+import defaultApiOptions from '../../api';
+import { RootState } from '../reducers';
 
-// TODO not sure, maybe it should return async function...
-api.interceptors.request.use(req => {
-    console.log('interceptor invoked');
-    const { user } = store.getState();
-    user.user?.getSession((error: any, session: CognitoUserSession) => {
-        if (error) console.log(error);
-        const token = session.getIdToken().getJwtToken();
-        req.headers = {
-            Authorization: `Bearer ${token}`,
-        };
-    });
-    return req;
-});
+export const fetchBundles = () => {
+    const api = axios.create(defaultApiOptions);
 
-export const fetchBundles = () => (
-    async (dispatch: Dispatch<BundleAction>) => {
+    return async (dispatch: Dispatch<BundleAction>, getState: () => RootState) => {
         dispatch({ type: BundleActionTypes.FETCH_BUNDLES_REQUEST });
+
+        api.interceptors.request.use(req => {
+            const { user } = getState();
+            const token = user.user?.getSignInUserSession()?.getIdToken().getJwtToken();
+            req.headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            return req;
+        });
 
         try {
             const res = await api.get<Bundle[]>('third-party-apps/bundles');
@@ -29,12 +26,23 @@ export const fetchBundles = () => (
         } catch (e) {
             dispatch({ type: BundleActionTypes.FETCH_BUNDLES_ERROR, payload: e.message });
         }
-    }
-);
+    };
+};
 
-export const addBundle = (bundle: Bundle) => (
-    async (dispatch: Dispatch<BundleAction>) => {
+export const addBundle = (bundle: Bundle) => {
+    const api = axios.create(defaultApiOptions);
+
+    return async (dispatch: Dispatch<BundleAction>, getState: () => RootState) => {
         dispatch({ type: BundleActionTypes.ADD_BUNDLE_REQUEST });
+
+        api.interceptors.request.use(req => {
+            const { user } = getState();
+            const token = user.user?.getSignInUserSession()?.getIdToken().getJwtToken();
+            req.headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            return req;
+        });
 
         try {
             const res = await api.post<Bundle>('third-party-apps/bundles', bundle);
@@ -42,12 +50,23 @@ export const addBundle = (bundle: Bundle) => (
         } catch (e) {
             dispatch({ type: BundleActionTypes.ADD_BUNDLE_ERROR, payload: e.message });
         }
-    }
-);
+    };
+};
 
-export const deleteBundle = (id: number) => (
-    async (dispatch: Dispatch<BundleAction>) => {
+export const deleteBundle = (id: number) => {
+    const api = axios.create(defaultApiOptions);
+
+    return async (dispatch: Dispatch<BundleAction>, getState: () => RootState) => {
         dispatch({ type: BundleActionTypes.DELETE_BUNDLE_REQUEST });
+
+        api.interceptors.request.use(req => {
+            const { user } = getState();
+            const token = user.user?.getSignInUserSession()?.getIdToken().getJwtToken();
+            req.headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            return req;
+        });
 
         try {
             await api.delete(`third-party-apps/bundles/${id}`);
@@ -55,5 +74,5 @@ export const deleteBundle = (id: number) => (
         } catch (e) {
             dispatch({ type: BundleActionTypes.DELETE_BUNDLE_ERROR, payload: e.message });
         }
-    }
-);
+    };
+};

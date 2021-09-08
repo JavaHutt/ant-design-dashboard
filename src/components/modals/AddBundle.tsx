@@ -3,11 +3,12 @@ import { Dispatch } from 'redux';
 import { Modal, Form, Input, Button } from 'antd';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
+import { RootState } from '../../store/reducers';
 
 interface AddBundleProps {
     visible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
+    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
 const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {

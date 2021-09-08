@@ -60,21 +60,16 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
     return async (dispatch: Dispatch<UserAction>) => {
         try {
             currentUser.getSession((error: any, session: CognitoUserSession) => {
-                console.log('get session err: ', error);
                 if (error) {
                     dispatch(userError(error));
                     return;
                 }
 
                 const tokenExpire = session.getIdToken().getExpiration();
-                console.log('decode payload:', session.getIdToken().decodePayload());
-                console.log('expire number: ', tokenExpire);
                 if (Date.now() > tokenExpire * 1000) {
-                    console.log('token expire');
                     dispatch(userLogout(currentUser));
                     return;
                 }
-                console.log('success dispatch 1');
                 dispatch(successLogin({ user: currentUser, session }));
             });
         } catch (e) {

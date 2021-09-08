@@ -183,7 +183,7 @@ const Bundles: React.FC<BundlesProps> = props => {
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            {bundles.length > 0 && isAdmin(groups) && <BundlesBar bundles={bundles} addBundle={addBundle} />}
+            {isAdmin(groups) && bundles.length > 0 && <BundlesBar bundles={bundles} addBundle={addBundle} />}
             <Table
                 rowKey={record => record.id!}
                 dataSource={bundles}

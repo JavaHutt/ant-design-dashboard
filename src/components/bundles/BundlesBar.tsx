@@ -6,10 +6,11 @@ import { FileExcelOutlined } from '@ant-design/icons';
 import AddBundle from '../modals/AddBundle';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
+import { RootState } from '../../store/reducers';
 
 interface BundlesBarProps {
     bundles: Bundle[];
-    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
+    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
 interface BundleHeaders {

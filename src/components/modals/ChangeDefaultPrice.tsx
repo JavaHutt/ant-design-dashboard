@@ -4,12 +4,13 @@ import { Modal, Form, Input, Button, notification } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { DefaultPrice } from '../../models/price';
 import { DefaultPriceAction } from '../../store/types/defaultPrice';
+import { RootState } from '../../store/reducers';
 
 interface ChangeDefaultPriceProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
     defaultPrice: DefaultPrice,
-    changeDefaultPrice: (defaultPrice: DefaultPrice) => (dispatch: Dispatch<DefaultPriceAction>) => Promise<void>,
+    changeDefaultPrice: (defaultPrice: DefaultPrice) => (dispatch: Dispatch<DefaultPriceAction>, getState: () => RootState) => Promise<void>,
 }
 
 const ChangeDefaultPrice = ({ visible, setVisible, defaultPrice, changeDefaultPrice }: ChangeDefaultPriceProps) => {

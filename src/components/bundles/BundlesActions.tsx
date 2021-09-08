@@ -3,10 +3,11 @@ import { Space, Button, Popconfirm, notification } from 'antd';
 import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
+import { RootState } from '../../store/reducers';
 
 interface ThirdPartyAppsActionsProps {
     bundle: Bundle;
-    deleteBundle: (id: number) => (dispatch: Dispatch<BundleAction>) => Promise<void>;
+    deleteBundle: (id: number) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
 const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
