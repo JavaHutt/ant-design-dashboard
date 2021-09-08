@@ -21,7 +21,7 @@ const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
             app_url,
         };
         addBundle(newBundle);
-        setVisible(false);       
+        setVisible(false);
         // setConfirmLoading(true);
         // setTimeout(() => {
         //     setVisible(false);

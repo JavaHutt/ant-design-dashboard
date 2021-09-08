@@ -154,9 +154,7 @@ const Bundles: React.FC<BundlesProps> = props => {
             title: 'Action',
             key: 'action',
             width: '10%',
-            render: record => {
-               if (isAdmin(groups)) return <BundlesActions bundle={record} deleteBundle={deleteBundle} />;
-            },
+            render: record => isAdmin(groups) ? <BundlesActions bundle={record} deleteBundle={deleteBundle} /> : null,
         },
     ];
 

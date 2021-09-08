@@ -1,5 +1,3 @@
-import { CognitoUser } from "amazon-cognito-identity-js";
-
 export interface LoginValues {
     username: string;
     password: string;

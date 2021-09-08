@@ -4,9 +4,11 @@ import userPool from '../../userPool';
 import { UserAction, UserActionTypes } from '../types/user';
 import { LoginValues } from '../../models/user';
 
-const successLogin = (userData : { user: CognitoUser, session: CognitoUserSession, }): UserAction => {
-    return { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData };
-};
+const successLogin = (userData : { user: CognitoUser, session: CognitoUserSession, }): UserAction => (
+    { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData }
+);
+
+export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
 
 export const userLogout = (user: CognitoUser | null): UserAction => {
     // TODO async or not?
@@ -40,8 +42,6 @@ export const userLogin = ({ username, password }: LoginValues) => {
     };
 };
 
-export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
-
 export const userChangePassword = (user: CognitoUser, newPassword: string) => async (dispatch: Dispatch<UserAction>) => {
     try {
         user.completeNewPasswordChallenge(newPassword, null, {
@@ -64,8 +64,8 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
                 if (error) {
                     dispatch(userError(error));
                     return;
-                };
-                
+                }
+
                 const tokenExpire = session.getIdToken().getExpiration();
                 console.log('decode payload:', session.getIdToken().decodePayload());
                 console.log('expire number: ', tokenExpire);
@@ -80,5 +80,5 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
         } catch (e) {
             dispatch(userError(e));
         }
-    }
+    };
 };

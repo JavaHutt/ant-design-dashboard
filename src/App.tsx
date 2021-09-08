@@ -24,10 +24,10 @@ type AppProps = StateProps & DispatchProps;
 const App: React.FC<AppProps> = props => {
     const { userState } = props;
     const { isLoggedIn, user } = userState;
-    const { firstLogin } = props;
+    const { firstLogin: firstUserLogin } = props;
 
     useEffect(() => {
-        firstLogin(user);
+        firstUserLogin(user);
     }, []);
 
     return (
