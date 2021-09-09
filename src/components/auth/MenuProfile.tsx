@@ -1,8 +1,10 @@
+import { useDispatch } from 'react-redux';
 import { Space } from 'antd';
 import useTypedSelector from '../../hooks/useTypedSelector';
 import useActions from '../../hooks/useActions';
 
 const MenuProfile: React.FC = () => {
+    const dispatch = useDispatch();
     const { user } = useTypedSelector(state => state.user);
     const { userLogout } = useActions();
 
@@ -11,7 +13,7 @@ const MenuProfile: React.FC = () => {
         return payload && payload.email;
     };
 
-    const handleLogout = () => userLogout(user!);
+    const handleLogout = () => dispatch(userLogout(user!));
 
     return (
         <div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Dispatch } from 'redux';
 import { Form, Input, Button, Typography, Alert } from 'antd';
 import { CognitoUser } from 'amazon-cognito-identity-js';
@@ -22,7 +23,12 @@ interface NewPasswordFormProps {
 }
 
 const NewPasswordForm: React.FC<NewPasswordFormProps> = ({ user, error, userError, userChangePassword }) => {
-    const onFinish = (values: onFinishValues) => userChangePassword(user, values.password);
+    const [loading, setLoading] = useState(false);
+
+    const onFinish = (values: onFinishValues) => {
+        setLoading(true);
+        userChangePassword(user, values.password);
+    };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -67,7 +73,7 @@ const NewPasswordForm: React.FC<NewPasswordFormProps> = ({ user, error, userErro
                     <Input.Password />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         Change password
                     </Button>
                 </Form.Item>

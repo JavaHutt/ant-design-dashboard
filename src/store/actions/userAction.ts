@@ -11,9 +11,7 @@ const successLogin = (userData : { user: CognitoUser, session: CognitoUserSessio
 export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
 
 export const userLogout = (user: CognitoUser | null): UserAction => {
-    // TODO async or not?
-    user?.signOut(() => { console.log('sign out callback') });
-    console.log('user logout after callback');
+    user?.signOut();
     return { type: UserActionTypes.USER_LOGOUT };
 };
 
@@ -42,16 +40,18 @@ export const userLogin = ({ username, password }: LoginValues) => {
     };
 };
 
-export const userChangePassword = (user: CognitoUser, newPassword: string) => async (dispatch: Dispatch<UserAction>) => {
-    try {
-        user.completeNewPasswordChallenge(newPassword, null, {
-            onSuccess: session => dispatch(successLogin({ user, session })),
-            onFailure: (err: any) => dispatch(userError(err)),
-        });
-    } catch (e) {
-        dispatch(userError(e));
+export const userChangePassword = (user: CognitoUser, newPassword: string) => (
+    async (dispatch: Dispatch<UserAction>) => {
+        try {
+            user.completeNewPasswordChallenge(newPassword, null, {
+                onSuccess: session => dispatch(successLogin({ user, session })),
+                onFailure: (err: any) => dispatch(userError(err)),
+            });
+        } catch (e) {
+            dispatch(userError(e));
+        }
     }
-};
+);
 
 export const firstLogin = (currentUser: CognitoUser | null) => {
     console.log('current user from first login: ', currentUser);
@@ -64,7 +64,8 @@ export const firstLogin = (currentUser: CognitoUser | null) => {
                     dispatch(userError(error));
                     return;
                 }
-
+                // TODO it seems like id token stays valid for a while after logout..
+                // I should consider try access token
                 const tokenExpire = session.getIdToken().getExpiration();
                 if (Date.now() > tokenExpire * 1000) {
                     dispatch(userLogout(currentUser));

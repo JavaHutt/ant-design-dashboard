@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Dispatch } from 'redux';
 import { Form, Input, Button, Checkbox, Alert } from 'antd';
 import { LoginValues } from '../../models/user';
@@ -15,7 +16,10 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ error, userLogin }) => {
+    const [loading, setLoading] = useState(false);
+
     const onFinish = (values: onFinishValues) => {
+        setLoading(true);
         userLogin(values);
     };
 
@@ -55,7 +59,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ error, userLogin }) => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         Login
                     </Button>
                 </Form.Item>
