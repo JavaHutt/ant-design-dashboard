@@ -8,7 +8,7 @@ const successLogin = (userData : { user: CognitoUser, session: CognitoUserSessio
     { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData }
 );
 
-const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
+export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
 
 export const userLogout = (user: CognitoUser | null): UserAction => {
     // TODO async or not?
