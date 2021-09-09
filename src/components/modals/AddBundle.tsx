@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Dispatch } from 'redux';
-import { Modal, Form, Input, Button } from 'antd';
+import { Modal, Form, Input, Button, notification } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
@@ -8,26 +9,32 @@ import { RootState } from '../../store/reducers';
 interface AddBundleProps {
     visible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    error: null | string;
     addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
+const AddBundle = ({ visible, setVisible, addBundle, error }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
-    const handleOk = (values: { [key: string]: string }) => {
+    const handleOk = async (values: { [key: string]: string }) => {
         const { app_name, app_url } = values;
         const newBundle: Bundle = {
             app_name,
             app_url,
         };
-        addBundle(newBundle);
-        setVisible(false);
-        // setConfirmLoading(true);
-        // setTimeout(() => {
-        //     setVisible(false);
-        //     setConfirmLoading(false);
-        // }, 2000);
+        setConfirmLoading(true);
+        await addBundle(newBundle);
+        setConfirmLoading(false);
+        // TODO error is empty on first unsuccessful request, but on second and onward it's ok.. what the fuck
+        console.log('error: ', error);
+        if (!error) {
+            setVisible(false);
+            notification.open({
+                message: `${app_name} bundle added`,
+                icon: <CheckCircleOutlined style={{ color: '#108ee9' }} />,
+            });
+        }
     };
 
     const handleCancel = () => setVisible(false);
@@ -44,7 +51,7 @@ const AddBundle = ({ visible, setVisible, addBundle }: AddBundleProps) => {
                 <Button onClick={handleCancel}>
                     Cancel
                 </Button>,
-                <Button form="addForm" key="submit" htmlType="submit" type="primary">
+                <Button form="addForm" key="submit" htmlType="submit" type="primary" loading={confirmLoading}>
                     Submit
                 </Button>,
             ]}

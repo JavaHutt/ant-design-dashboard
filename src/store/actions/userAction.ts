@@ -8,7 +8,7 @@ const successLogin = (userData : { user: CognitoUser, session: CognitoUserSessio
     { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData }
 );
 
-export const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
+const userError = (errorInfo: any) => ({ type: UserActionTypes.USER_LOGIN_ERROR, payload: errorInfo });
 
 export const userLogout = (user: CognitoUser | null): UserAction => {
     // TODO async or not?
@@ -33,7 +33,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
             dispatch({ type: UserActionTypes.USER_LOGIN, payload: user });
             user.authenticateUser(authDetails, {
                 onSuccess: session => dispatch(successLogin({ user, session })),
-                onFailure: (err: any) => dispatch({ type: UserActionTypes.USER_LOGIN_ERROR, payload: err }),
+                onFailure: (err: any) => dispatch(userError(err)),
                 newPasswordRequired: () => dispatch({ type: UserActionTypes.USER_LOGIN_FORCE_CHANGE_PASSWORD }),
             });
         } catch (e) {

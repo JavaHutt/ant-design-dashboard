@@ -10,6 +10,7 @@ import { RootState } from '../../store/reducers';
 
 interface BundlesBarProps {
     bundles: Bundle[];
+    error: null | string;
     addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
@@ -18,7 +19,7 @@ interface BundleHeaders {
     key: keyof Bundle;
 }
 
-const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle }) => {
+const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle, error }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const csvHeaders: BundleHeaders[] = [
         { label: 'Bundle Name', key: 'app_name' },
@@ -41,6 +42,7 @@ const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle }) => {
                 visible={showAddModal}
                 setVisible={setShowAddModal}
                 addBundle={addBundle}
+                error={error}
             />
         </Space>
     );

@@ -39,8 +39,8 @@ type BundlesProps = StateProps & DispatchProps;
 const Bundles: React.FC<BundlesProps> = props => {
     const { userState, bundleState, defaultPriceState } = props;
     const { groups } = userState;
-    const { bundles, error: errorLoadingBundles } = bundleState;
-    const { defaultPrice, error: errorLoadingDefaultPrice } = defaultPriceState;
+    const { bundles, error: errorBundle } = bundleState;
+    const { defaultPrice, error: errorDefaultPrice } = defaultPriceState;
     const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
 
     const [searchText, setSearchText] = useState('');
@@ -171,19 +171,19 @@ const Bundles: React.FC<BundlesProps> = props => {
         fetchDefaultPrice();
     }, []);
 
-    // WHY THE FUCK IF I PUT THIS LOGIC INTO ONE USEEFFECT HOOK, IT NOTIFIES 3 TIMES?!
     useEffect(() => {
-        if (errorLoadingBundles) notifyError('Error loading bundles', errorLoadingBundles);
-    }, [errorLoadingBundles]);
+        if (errorBundle) notifyError('Bundles error', errorBundle);
+    }, [errorBundle]);
 
     useEffect(() => {
-        if (errorLoadingDefaultPrice) notifyError('Error loading default price', errorLoadingDefaultPrice);
-    }, [errorLoadingDefaultPrice]);
+        if (errorDefaultPrice) notifyError('Default price error', errorDefaultPrice);
+    }, [errorDefaultPrice]);
 
     return (
         <>
             <Title level={2}>Third Party Apps</Title>
-            {isAdmin(groups) && bundles.length > 0 && <BundlesBar bundles={bundles} addBundle={addBundle} />}
+            {isAdmin(groups) && bundles.length > 0
+            && <BundlesBar bundles={bundles} addBundle={addBundle} error={errorBundle} />}
             <Table
                 rowKey={record => record.id!}
                 dataSource={bundles}
@@ -194,7 +194,7 @@ const Bundles: React.FC<BundlesProps> = props => {
                     rowExpandable,
                 }}
             />
-            {!errorLoadingDefaultPrice && (
+            {!errorDefaultPrice && (
                 <Text className={styles.footer}>
                     Note: current default price is {defaultPrice.default_price}&nbsp;
                     <button

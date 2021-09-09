@@ -24,7 +24,10 @@ export const fetchBundles = () => {
             const res = await api.get<Bundle[]>('third-party-apps/bundles');
             dispatch({ type: BundleActionTypes.FETCH_BUNDLES_SUCCESS, payload: res.data });
         } catch (e) {
-            dispatch({ type: BundleActionTypes.FETCH_BUNDLES_ERROR, payload: e.message });
+            dispatch({
+                type: BundleActionTypes.FETCH_BUNDLES_ERROR,
+                payload: `Error fetching bundles: ${e.message}`,
+            });
         }
     };
 };
@@ -48,7 +51,7 @@ export const addBundle = (bundle: Bundle) => {
             const res = await api.post<Bundle>('third-party-apps/bundles', bundle);
             dispatch({ type: BundleActionTypes.ADD_BUNDLE_SUCCESS, payload: res.data });
         } catch (e) {
-            dispatch({ type: BundleActionTypes.ADD_BUNDLE_ERROR, payload: e.message });
+            dispatch({ type: BundleActionTypes.ADD_BUNDLE_ERROR, payload: `Error adding bundle: ${e.message}` });
         }
     };
 };
@@ -72,7 +75,7 @@ export const deleteBundle = (id: number) => {
             await api.delete(`third-party-apps/bundles/${id}`);
             dispatch({ type: BundleActionTypes.DELETE_BUNDLE_SUCCESS, payload: id });
         } catch (e) {
-            dispatch({ type: BundleActionTypes.DELETE_BUNDLE_ERROR, payload: e.message });
+            dispatch({ type: BundleActionTypes.DELETE_BUNDLE_ERROR, payload: `Error deleting bundle: ${e.message}` });
         }
     };
 };
