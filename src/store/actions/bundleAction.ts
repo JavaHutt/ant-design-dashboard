@@ -56,6 +56,30 @@ export const addBundle = (bundle: Bundle) => {
     };
 };
 
+export const updateBundle = (bundle: Bundle) => {
+    const api = axios.create(defaultApiOptions);
+
+    return async (dispatch: Dispatch<BundleAction>, getState: () => RootState) => {
+        dispatch({ type: BundleActionTypes.UPDATE_BUNDLE_REQUEST });
+
+        api.interceptors.request.use(req => {
+            const { user } = getState();
+            const token = user.user?.getSignInUserSession()?.getIdToken().getJwtToken();
+            req.headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            return req;
+        });
+
+        try {
+            await api.put(`third-party-apps/bundles/${bundle.id}`, bundle);
+            dispatch({ type: BundleActionTypes.UPDATE_BUNDLE_SUCCESS, payload: bundle });
+        } catch (e) {
+            dispatch({ type: BundleActionTypes.UPDATE_BUNDLE_ERROR, payload: `Error updating bundle: ${e.message}` });
+        }
+    };
+};
+
 export const deleteBundle = (id: number) => {
     const api = axios.create(defaultApiOptions);
 

@@ -13,6 +13,9 @@ export enum BundleActionTypes {
     ADD_BUNDLE_REQUEST = 'ADD_BUNDLE_REQUEST',
     ADD_BUNDLE_SUCCESS = 'ADD_BUNDLE_SUCCESS',
     ADD_BUNDLE_ERROR = 'ADD_BUNDLE_ERROR',
+    UPDATE_BUNDLE_REQUEST = 'UPDATE_BUNDLE_REQUEST',
+    UPDATE_BUNDLE_SUCCESS = 'UPDATE_BUNDLE_SUCCESS',
+    UPDATE_BUNDLE_ERROR = 'UPDATE_BUNDLE_ERROR',
     DELETE_BUNDLE_REQUEST = 'DELETE_BUNDLE_REQUEST',
     DELETE_BUNDLE_SUCCESS = 'DELETE_BUNDLE_SUCCESS',
     DELETE_BUNDLE_ERROR = 'DELETE_BUNDLE_ERROR',
@@ -46,6 +49,20 @@ interface AddBundleErrorAction {
     payload: string;
 }
 
+interface UpdateBundleRequestAction {
+    type: BundleActionTypes.UPDATE_BUNDLE_REQUEST;
+}
+
+interface UpdateBundleSuccessAction {
+    type: BundleActionTypes.UPDATE_BUNDLE_SUCCESS;
+    payload: Bundle;
+}
+
+interface UpdateBundleErrorAction {
+    type: BundleActionTypes.UPDATE_BUNDLE_ERROR;
+    payload: string;
+}
+
 interface DeleteBundleRequestAction {
     type: BundleActionTypes.DELETE_BUNDLE_REQUEST;
 }
@@ -66,6 +83,9 @@ export type BundleAction = FetchBundlesRequestAction |
     AddBundleRequestAction |
     AddBundleSuccessAction |
     AddBundleErrorAction |
+    UpdateBundleRequestAction |
+    UpdateBundleSuccessAction |
+    UpdateBundleErrorAction |
     DeleteBundleRequestAction |
     DeleteBundleSuccessAction |
     DeleteBundleErrorAction;
