@@ -10,7 +10,8 @@ interface ChangeDefaultPriceProps {
     visible: boolean,
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
     defaultPrice: DefaultPrice,
-    changeDefaultPrice: (defaultPrice: DefaultPrice) => (dispatch: Dispatch<DefaultPriceAction>, getState: () => RootState) => Promise<void>,
+    changeDefaultPrice: (defaultPrice: DefaultPrice) 
+    => (dispatch: Dispatch<DefaultPriceAction>, getState: () => RootState) => Promise<void>,
 }
 
 const ChangeDefaultPrice = ({ visible, setVisible, defaultPrice, changeDefaultPrice }: ChangeDefaultPriceProps) => {

@@ -8,15 +8,14 @@ import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { RootState } from '../../store/reducers';
 import * as BundleActionCreators from '../../store/actions/bundleAction';
 import * as DefaultPriceActionCreators from '../../store/actions/defaultPriceAction';
-import styles from './Bundles.module.scss';
 import BundlesBar from './BundlesBar';
 import BundlesActions from './BundlesActions';
-import ChangeDefaultPrice from '../modals/ChangeDefaultPrice';
 import Bundle from '../../models/bundle';
 import CountryPrices from './CountryPrices';
 import { isAdmin } from '../../models/user';
+import DefaultPriceComponent from './DefaultPrice';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const mapStateToProps = (state: RootState) => ({
     userState: state.user,
@@ -39,13 +38,12 @@ type BundlesProps = StateProps & DispatchProps;
 const Bundles: React.FC<BundlesProps> = props => {
     const { userState, bundleState, defaultPriceState } = props;
     const { groups } = userState;
-    const { bundles, error: errorBundle } = bundleState;
-    const { defaultPrice, error: errorDefaultPrice } = defaultPriceState;
+    const { bundles, error: errorBundle, loading: loadingBundle } = bundleState;
+    const { defaultPrice, error: errorDefaultPrice, loading: loadingDefaultPrice } = defaultPriceState;
     const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [showChangeDefaultPriceModal, setShowChangeDefaultPriceModal] = useState(false);
 
     let searchInput: Input | null;
     const pageSize = 15;
@@ -185,6 +183,7 @@ const Bundles: React.FC<BundlesProps> = props => {
             {isAdmin(groups) && bundles.length > 0
             && <BundlesBar bundles={bundles} addBundle={addBundle} error={errorBundle} />}
             <Table
+                loading={loadingBundle}
                 rowKey={record => record.id!}
                 dataSource={bundles}
                 columns={columns}
@@ -195,23 +194,12 @@ const Bundles: React.FC<BundlesProps> = props => {
                 }}
             />
             {!errorDefaultPrice && (
-                <Text className={styles.footer}>
-                    Note: current default price is {defaultPrice.default_price}&nbsp;
-                    <button
-                        type="button"
-                        className={styles['change-default-price-link']}
-                        onClick={() => setShowChangeDefaultPriceModal(true)}
-                    >
-                        change...
-                    </button>
-                </Text>
+                <DefaultPriceComponent
+                    defaultPrice={defaultPrice}
+                    loadingDefaultPrice={loadingDefaultPrice}
+                    changeDefaultPrice={changeDefaultPrice}
+                />
             )}
-            <ChangeDefaultPrice
-                visible={showChangeDefaultPriceModal}
-                setVisible={setShowChangeDefaultPriceModal}
-                defaultPrice={defaultPrice}
-                changeDefaultPrice={changeDefaultPrice}
-            />
         </>
     );
 };
