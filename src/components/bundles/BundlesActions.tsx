@@ -1,16 +1,22 @@
+import { useState } from 'react';
 import { Dispatch } from 'redux';
 import { Space, Button, Popconfirm, notification } from 'antd';
-import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
+import EditBundle from '../modals/EditBundle';
 
-interface ThirdPartyAppsActionsProps {
+interface BundlesActionsProps {
     bundle: Bundle;
+    error: null | string;
+    updateBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
     deleteBundle: (id: number) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBundle }) => {
+const BundlesActions: React.FC<BundlesActionsProps> = ({ bundle, error, updateBundle, deleteBundle }) => {
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+
     const handleDelete = (id: number, appName: string) => {
         deleteBundle(id);
         notification.open({
@@ -30,6 +36,14 @@ const BundlesActions: React.FC<ThirdPartyAppsActionsProps> = ({ bundle, deleteBu
             >
                 <Button shape="circle" icon={<DeleteOutlined />} />
             </Popconfirm>
+            <Button shape="circle" icon={<EditOutlined />} onClick={() => setShowUpdateModal(true)} />
+            <EditBundle
+                bundle={bundle}
+                visible={showUpdateModal}
+                setVisible={setShowUpdateModal}
+                updateBundle={updateBundle}
+                error={error}
+            />
         </Space>
     );
 };

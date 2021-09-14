@@ -11,28 +11,31 @@ interface EditBundleProps {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     bundle: Bundle;
     error: null | string;
-    addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
+    updateBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const EditBundle = ({ visible, setVisible, bundle, addBundle, error }: EditBundleProps) => {
+const EditBundle = ({ visible, setVisible, bundle, updateBundle, error }: EditBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
     const handleOk = async (values: { [key: string]: string }) => {
         const { app_name, app_url } = values;
+        const { id } = bundle;
+
         const newBundle: Bundle = {
+            id,
             app_name,
             app_url,
         };
         setConfirmLoading(true);
-        await addBundle(newBundle);
+        await updateBundle(newBundle);
         setConfirmLoading(false);
         // TODO error is empty on first unsuccessful request, but on second and onward it's ok.. what the fuck
         console.log('error: ', error);
         if (!error) {
             setVisible(false);
             notification.open({
-                message: `${app_name} bundle added`,
+                message: `${app_name} bundle updated`,
                 icon: <CheckCircleOutlined style={{ color: '#108ee9' }} />,
             });
         }
@@ -44,7 +47,7 @@ const EditBundle = ({ visible, setVisible, bundle, addBundle, error }: EditBundl
 
     return (
         <Modal
-            title="Add Bundle"
+            title="Edit Bundle"
             visible={visible}
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
@@ -52,13 +55,13 @@ const EditBundle = ({ visible, setVisible, bundle, addBundle, error }: EditBundl
                 <Button onClick={handleCancel}>
                     Cancel
                 </Button>,
-                <Button form="addForm" key="submit" htmlType="submit" type="primary" loading={confirmLoading}>
+                <Button form="updateForm" key="submit" htmlType="submit" type="primary" loading={confirmLoading}>
                     Submit
                 </Button>,
             ]}
         >
             <Form
-                id="addForm"
+                id="updateForm"
                 name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
@@ -68,6 +71,7 @@ const EditBundle = ({ visible, setVisible, bundle, addBundle, error }: EditBundl
                 <Form.Item
                     label="Bundle Name"
                     name="app_name"
+                    initialValue={bundle.app_name}
                     rules={[{ required: true, message: 'Please input bundle name!' }]}
                 >
                     <Input />
@@ -75,6 +79,7 @@ const EditBundle = ({ visible, setVisible, bundle, addBundle, error }: EditBundl
                 <Form.Item
                     label="URL"
                     name="app_url"
+                    initialValue={bundle.app_url}
                     rules={[{ required: true, message: 'Please input URL!', pattern: urlRegex }]}
                 >
                     <Input />

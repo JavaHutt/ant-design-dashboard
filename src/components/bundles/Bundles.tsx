@@ -40,7 +40,7 @@ const Bundles: React.FC<BundlesProps> = props => {
     const { groups } = userState;
     const { bundles, error: errorBundle, loading: loadingBundle } = bundleState;
     const { defaultPrice, error: errorDefaultPrice, loading: loadingDefaultPrice } = defaultPriceState;
-    const { fetchBundles, addBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
+    const { fetchBundles, addBundle, updateBundle, deleteBundle, fetchDefaultPrice, changeDefaultPrice } = props;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -152,7 +152,10 @@ const Bundles: React.FC<BundlesProps> = props => {
             title: 'Action',
             key: 'action',
             width: '10%',
-            render: record => isAdmin(groups) ? <BundlesActions bundle={record} deleteBundle={deleteBundle} /> : null,
+            render: record => isAdmin(groups)
+            ? (
+                <BundlesActions bundle={record} error={errorBundle} deleteBundle={deleteBundle} updateBundle={updateBundle} />
+            ) : null,
         },
     ];
 
