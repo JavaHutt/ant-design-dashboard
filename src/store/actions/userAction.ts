@@ -4,6 +4,8 @@ import userPool from '../../userPool';
 import { UserAction, UserActionTypes } from '../types/user';
 import { LoginValues } from '../../models/user';
 
+const { REACT_APP_DOMAIN_URL: domain } = process.env;
+
 const successLogin = (userData : { user: CognitoUser, session: CognitoUserSession, }): UserAction => (
     { type: UserActionTypes.USER_LOGIN_SUCCESS, payload: userData }
 );
@@ -19,7 +21,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
     const user = new CognitoUser({
         Username: username,
         Pool: userPool,
-        Storage: new CookieStorage({ domain: 'localhost', secure: false }),
+        Storage: new CookieStorage({ domain: domain!, secure: false }),
     });
     const authDetails = new AuthenticationDetails({
         Username: username,
@@ -28,7 +30,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
 
     return async (dispatch: Dispatch<UserAction>) => {
         try {
-            dispatch({ type: UserActionTypes.USER_LOGIN, payload: user });
+            dispatch({ type: UserActionTypes.USER_LOGIN_REQUEST, payload: user });
             user.authenticateUser(authDetails, {
                 onSuccess: session => dispatch(successLogin({ user, session })),
                 onFailure: (err: any) => dispatch(userError(err)),
@@ -43,6 +45,7 @@ export const userLogin = ({ username, password }: LoginValues) => {
 export const userChangePassword = (user: CognitoUser, newPassword: string) => (
     async (dispatch: Dispatch<UserAction>) => {
         try {
+            dispatch({ type: UserActionTypes.USER_LOGIN_REQUEST, payload: user });
             user.completeNewPasswordChallenge(newPassword, null, {
                 onSuccess: session => dispatch(successLogin({ user, session })),
                 onFailure: (err: any) => dispatch(userError(err)),

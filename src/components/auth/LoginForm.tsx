@@ -12,14 +12,12 @@ interface onFinishValues {
 
 interface LoginFormProps {
     error: any;
+    loading: boolean;
     userLogin: ({ username, password }: LoginValues) => (dispatch: Dispatch<UserAction>) => Promise<void>;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ error, userLogin }) => {
-    const [loading, setLoading] = useState(false);
-
+const LoginForm: React.FC<LoginFormProps> = ({ error, loading, userLogin }) => {
     const onFinish = (values: onFinishValues) => {
-        setLoading(true);
         userLogin(values);
     };
 

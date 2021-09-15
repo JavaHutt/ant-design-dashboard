@@ -15,6 +15,7 @@ interface onFinishValues {
 interface NewPasswordFormProps {
     user: CognitoUser;
     error: any;
+    loading: boolean;
     userError: (errorInfo: any) => {
         type: UserActionTypes;
         payload: any;
@@ -22,11 +23,8 @@ interface NewPasswordFormProps {
     userChangePassword: (user: CognitoUser, newPassword: string) => (dispatch: Dispatch<UserAction>) => Promise<void>;
 }
 
-const NewPasswordForm: React.FC<NewPasswordFormProps> = ({ user, error, userError, userChangePassword }) => {
-    const [loading, setLoading] = useState(false);
-
+const NewPasswordForm: React.FC<NewPasswordFormProps> = ({ user, error, loading, userError, userChangePassword }) => {
     const onFinish = (values: onFinishValues) => {
-        setLoading(true);
         userChangePassword(user, values.password);
     };
 

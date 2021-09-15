@@ -6,11 +6,12 @@ export interface UserState {
     groups: UserGroups[];
     isLoggedIn: boolean;
     forceChangePassword: boolean;
+    loading: boolean;
     error: any;
 }
 
 export enum UserActionTypes {
-    USER_LOGIN = 'USER_LOGIN',
+    USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST',
     USER_LOGIN_FORCE_CHANGE_PASSWORD = 'USER_LOGIN_FORCE_CHANGE_PASSWORD',
     USER_LOGIN_CHANGE_PASSWORD = 'USER_LOGIN_CHANGE_PASSWORD',
     USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS',
@@ -19,7 +20,7 @@ export enum UserActionTypes {
 }
 
 interface UserLoginAction {
-    type: UserActionTypes.USER_LOGIN;
+    type: UserActionTypes.USER_LOGIN_REQUEST;
     payload: CognitoUser;
 }
 
