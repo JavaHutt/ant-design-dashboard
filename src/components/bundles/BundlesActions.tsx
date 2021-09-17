@@ -6,15 +6,17 @@ import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
 import EditBundle from '../modals/EditBundle';
+import { DefaultPrice } from '../../models/price';
 
 interface BundlesActionsProps {
     bundle: Bundle;
+    defaultPrice: DefaultPrice
     error: null | string;
     updateBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
     deleteBundle: (id: number) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const BundlesActions: React.FC<BundlesActionsProps> = ({ bundle, error, updateBundle, deleteBundle }) => {
+const BundlesActions: React.FC<BundlesActionsProps> = ({ bundle, defaultPrice, error, updateBundle, deleteBundle }) => {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
 
     const handleDelete = (id: number, appName: string) => {
@@ -39,6 +41,7 @@ const BundlesActions: React.FC<BundlesActionsProps> = ({ bundle, error, updateBu
             <Button shape="circle" icon={<EditOutlined />} onClick={() => setShowUpdateModal(true)} />
             <EditBundle
                 bundle={bundle}
+                defaultPrice={defaultPrice}
                 visible={showUpdateModal}
                 setVisible={setShowUpdateModal}
                 updateBundle={updateBundle}

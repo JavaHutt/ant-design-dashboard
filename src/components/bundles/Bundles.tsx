@@ -154,7 +154,13 @@ const Bundles: React.FC<BundlesProps> = props => {
             width: '10%',
             render: record => isAdmin(groups)
             ? (
-                <BundlesActions bundle={record} error={errorBundle} deleteBundle={deleteBundle} updateBundle={updateBundle} />
+                <BundlesActions
+                    bundle={record}
+                    defaultPrice={defaultPrice}
+                    error={errorBundle}
+                    deleteBundle={deleteBundle}
+                    updateBundle={updateBundle}
+                />
             ) : null,
         },
     ];
@@ -184,7 +190,7 @@ const Bundles: React.FC<BundlesProps> = props => {
         <>
             <Title level={2}>Third Party Apps</Title>
             {isAdmin(groups) && bundles.length > 0
-            && <BundlesBar bundles={bundles} addBundle={addBundle} error={errorBundle} />}
+            && <BundlesBar bundles={bundles} defaultPrice={defaultPrice} addBundle={addBundle} error={errorBundle} />}
             <Table
                 loading={loadingBundle}
                 rowKey={record => record.id!}
@@ -200,7 +206,6 @@ const Bundles: React.FC<BundlesProps> = props => {
                 <DefaultPriceComponent
                     defaultPrice={defaultPrice}
                     loadingDefaultPrice={loadingDefaultPrice}
-                    changeDefaultPrice={changeDefaultPrice}
                 />
             )}
         </>

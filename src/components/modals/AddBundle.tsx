@@ -5,17 +5,35 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
+import { DefaultPrice } from '../../models/price';
 
 interface AddBundleProps {
     visible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    defaultPrice: DefaultPrice;
     error: null | string;
     addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const AddBundle = ({ visible, setVisible, addBundle, error }: AddBundleProps) => {
+const AddBundle = ({ visible, setVisible, defaultPrice, error, addBundle }: AddBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
+
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+    const priceRegex = /^[1-9]\d*$/;
+
+    const nameRules = [
+        { required: true, message: 'Please input bundle name!' },
+    ];
+
+    const urlRules = [
+        { required: true, message: 'Please input URL!' },
+        { pattern: urlRegex, message: 'Please input valid URL!' },
+    ];
+
+    const priceRules = [
+        { required: true, message: 'Please input price!' },
+        { pattern: priceRegex, message: 'Please input a positive integer number!' },
+    ];
 
     const handleOk = async (values: { [key: string]: string }) => {
         const { app_name, app_url } = values;
@@ -68,16 +86,24 @@ const AddBundle = ({ visible, setVisible, addBundle, error }: AddBundleProps) =>
                 <Form.Item
                     label="Bundle Name"
                     name="app_name"
-                    rules={[{ required: true, message: 'Please input bundle name!' }]}
+                    rules={nameRules}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="URL"
                     name="app_url"
-                    rules={[{ required: true, message: 'Please input URL!', pattern: urlRegex }]}
+                    rules={urlRules}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Price"
+                    name="price_for_app"
+                    initialValue={defaultPrice.default_price}
+                    rules={priceRules}
+                >
+                    <Input type="number" min="1" />
                 </Form.Item>
             </Form>
         </Modal>

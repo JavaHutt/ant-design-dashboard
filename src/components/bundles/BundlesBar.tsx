@@ -7,9 +7,11 @@ import AddBundle from '../modals/AddBundle';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
+import { DefaultPrice } from '../../models/price';
 
 interface BundlesBarProps {
     bundles: Bundle[];
+    defaultPrice: DefaultPrice;
     error: null | string;
     addBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
@@ -19,7 +21,7 @@ interface BundleHeaders {
     key: keyof Bundle;
 }
 
-const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle, error }) => {
+const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, defaultPrice, error, addBundle }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const csvHeaders: BundleHeaders[] = [
         { label: 'Bundle Name', key: 'app_name' },
@@ -41,8 +43,9 @@ const BundlesBar: React.FC<BundlesBarProps> = ({ bundles, addBundle, error }) =>
             <AddBundle
                 visible={showAddModal}
                 setVisible={setShowAddModal}
-                addBundle={addBundle}
+                defaultPrice={defaultPrice}
                 error={error}
+                addBundle={addBundle}
             />
         </Space>
     );

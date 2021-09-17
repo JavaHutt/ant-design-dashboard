@@ -5,18 +5,36 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import Bundle from '../../models/bundle';
 import { BundleAction } from '../../store/types/bundle';
 import { RootState } from '../../store/reducers';
+import { DefaultPrice } from '../../models/price';
 
 interface EditBundleProps {
     visible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     bundle: Bundle;
+    defaultPrice: DefaultPrice;
     error: null | string;
     updateBundle: (bundle: Bundle) => (dispatch: Dispatch<BundleAction>, getState: () => RootState) => Promise<void>;
 }
 
-const EditBundle = ({ visible, setVisible, bundle, updateBundle, error }: EditBundleProps) => {
+const EditBundle = ({ visible, setVisible, bundle, defaultPrice, error, updateBundle }: EditBundleProps) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
+
     const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+    const priceRegex = /^[1-9]\d*$/;
+
+    const nameRules = [
+        { required: true, message: 'Please input bundle name!' },
+    ];
+
+    const urlRules = [
+        { required: true, message: 'Please input URL!' },
+        { pattern: urlRegex, message: 'Please input valid URL!' },
+    ];
+
+    const priceRules = [
+        { required: true, message: 'Please input price!' },
+        { pattern: priceRegex, message: 'Please input a positive integer number!' },
+    ];
 
     const handleOk = async (values: { [key: string]: string }) => {
         const { app_name, app_url } = values;
@@ -72,7 +90,7 @@ const EditBundle = ({ visible, setVisible, bundle, updateBundle, error }: EditBu
                     label="Bundle Name"
                     name="app_name"
                     initialValue={bundle.app_name}
-                    rules={[{ required: true, message: 'Please input bundle name!' }]}
+                    rules={nameRules}
                 >
                     <Input />
                 </Form.Item>
@@ -80,9 +98,17 @@ const EditBundle = ({ visible, setVisible, bundle, updateBundle, error }: EditBu
                     label="URL"
                     name="app_url"
                     initialValue={bundle.app_url}
-                    rules={[{ required: true, message: 'Please input URL!', pattern: urlRegex }]}
+                    rules={urlRules}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Price"
+                    name="price_for_app"
+                    initialValue={bundle.price_for_app || defaultPrice.default_price}
+                    rules={priceRules}
+                >
+                    <Input type="number" min="1" />
                 </Form.Item>
             </Form>
         </Modal>

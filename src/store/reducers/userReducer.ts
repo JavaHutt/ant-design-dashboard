@@ -1,5 +1,6 @@
 import { UserState, UserAction, UserActionTypes } from '../types/user';
 import userPool from '../../userPool';
+import { UserGroups } from '../../models/user';
 
 const defaultState: UserState = {
     user: userPool.getCurrentUser(),
@@ -23,7 +24,7 @@ const priceReducer = (state = defaultState, action: UserAction): UserState => {
     }
     case UserActionTypes.USER_LOGIN_SUCCESS: {
         const { user, session } = action.payload;
-        const groups = session.getIdToken().decodePayload()['cognito:groups'] ?? [];
+        const groups: UserGroups[] = session.getIdToken().decodePayload()['cognito:groups'] ?? [];
 
         return { ...state, error: null, forceChangePassword: false, isLoggedIn: true, user, groups, loading: false };
     }
